@@ -766,11 +766,16 @@
         }
         
         @media (max-width: 768px) {
+            .header {
+                padding: 3px 0; /* Much tighter on mobile */
+            }
+            
             .header-content {
                 flex-direction: column;
                 text-align: center;
-                gap: 15px;
+                gap: 5px; /* Minimal gap */
                 padding: 0 15px;
+                min-height: auto; /* Remove min-height constraint */
             }
             
             .header-badge {
@@ -782,8 +787,9 @@
             }
             
             .logo-image {
-                height: 140px; /* Bigger logo on mobile */
-                max-width: 350px;
+                height: 180px; /* Much bigger logo on mobile */
+                max-width: 450px;
+                margin-bottom: -5px; /* Pull closer to yellow line */
             }
             
             .main-title h1 {
@@ -1029,7 +1035,7 @@
         /* Extra small mobile devices */
         @media (max-width: 480px) {
             .header {
-                padding: 5px 0;
+                padding: 2px 0; /* Almost no padding on small mobile */
             }
             
             .container {
@@ -1059,8 +1065,9 @@
             }
             
             .logo-image {
-                height: 120px; /* Still bigger than before on small mobile */
-                max-width: 300px;
+                height: 160px; /* Large logo even on small screens */
+                max-width: 400px;
+                margin-bottom: -8px; /* Even closer to yellow line */
             }
             
             .tier-card {
