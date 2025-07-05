@@ -225,6 +225,396 @@
             align-items: center;
             justify-content: space-between;
             min-height: 60px;
+            position: relative;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        /* Dark Mode Toggle */
+        .dark-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 25px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark-mode-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .dark-mode-toggle:hover::before {
+            left: 100%;
+        }
+        
+        .dark-mode-toggle:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+        
+        .toggle-icon {
+            font-size: 16px;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .toggle-icon.rotating {
+            transform: rotate(360deg) scale(1.2);
+        }
+        
+        .dark-mode-toggle:hover .toggle-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        .toggle-text {
+            color: #000000;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        /* Dark Mode Transition Overlay - Real-time sliding effect */
+        .theme-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(180deg, 
+                rgba(26, 26, 26, 0.9) 0%, 
+                rgba(44, 44, 44, 0.8) 50%, 
+                rgba(26, 26, 26, 0.9) 100%);
+            z-index: 1;
+            pointer-events: none;
+            transform: translateY(-100%);
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+        }
+        
+        .theme-transition-overlay.active {
+            transform: translateY(0);
+            opacity: 1;
+            animation: slideAndFade 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        .theme-transition-overlay.reverse {
+            background: linear-gradient(180deg, 
+                rgba(255, 255, 255, 0.9) 0%, 
+                rgba(245, 245, 245, 0.8) 50%, 
+                rgba(255, 255, 255, 0.9) 100%);
+        }
+        
+        @keyframes slideAndFade {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            50% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+        
+        /* Dark Mode Styles with Smooth Dissolve Transitions */
+        body {
+            transition: background-color 2s ease-in-out, 
+                        color 2s ease-in-out;
+        }
+        
+        .header,
+        .contact-bar,
+        .calculator-form,
+        .live-preview,
+        .modal-content,
+        .summary-card,
+        .breakdown-section,
+        .materials-table,
+        .admin-content,
+        .tier-card,
+        .checkbox-group,
+        .house-details,
+        .pricing-tiers,
+        .options-section {
+            transition: background-color 2s ease-in-out, 
+                        border-color 2s ease-in-out, 
+                        color 2s ease-in-out,
+                        box-shadow 2s ease-in-out;
+        }
+        
+        .form-section input,
+        .form-section select,
+        .detail-row select,
+        .detail-row input,
+        .price-item input,
+        .form-section label,
+        .section-title,
+        .main-title h1,
+        .main-title p,
+        .preview-title,
+        .cost-item,
+        .cost-amount,
+        .contact-bar-label,
+        .contact-bar-value,
+        .tier-card h4,
+        .tier-card p,
+        .tier-specs div,
+        .checkbox-group label,
+        .toggle-text {
+            transition: background-color 2s ease-in-out, 
+                        border-color 2s ease-in-out, 
+                        color 2s ease-in-out;
+        }
+        
+        /* Remove any overlay effects */
+        .theme-transition-overlay {
+            display: none;
+        }
+        
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .header {
+            background: #2c2c2c;
+            border-bottom-color: #ffd700;
+        }
+        
+        body.dark-mode .contact-bar {
+            background: #2c2c2c;
+        }
+        
+        body.dark-mode .contact-bar-item:hover {
+            background: rgba(255, 215, 0, 0.15);
+        }
+        
+        body.dark-mode .contact-bar-label {
+            color: #aaaaaa;
+        }
+        
+        body.dark-mode .contact-bar-value {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .main-title h1,
+        body.dark-mode .main-title p,
+        body.dark-mode .section-title,
+        body.dark-mode .form-section label {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .calculator-form {
+            background: #2c2c2c;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .form-section input,
+        body.dark-mode .form-section select {
+            background: #1a1a1a;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        /* Dark mode dropdown arrow styling */
+        body.dark-mode .form-section select,
+        body.dark-mode .detail-row select {
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ffffff'%3E%3Cpath d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+            padding-right: 40px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        
+        body.dark-mode .form-section input:focus,
+        body.dark-mode .form-section select:focus {
+            background: #333333;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        body.dark-mode .house-details,
+        body.dark-mode .pricing-tiers,
+        body.dark-mode .options-section {
+            background: rgba(255, 215, 0, 0.05);
+            border-color: #ffd700;
+        }
+        
+        body.dark-mode .detail-row label {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .detail-row select,
+        body.dark-mode .detail-row input {
+            background: #1a1a1a;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .tier-card {
+            background: #3a3a3a;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .tier-card h4 {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .tier-card p {
+            color: #cccccc;
+        }
+        
+        body.dark-mode .tier-specs div {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .tier-card:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        body.dark-mode .tier-card.selected {
+            background: rgba(255, 215, 0, 0.2);
+        }
+        
+        body.dark-mode .checkbox-group {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode .checkbox-group label {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .checkbox-group:hover {
+            background: rgba(255, 215, 0, 0.15);
+        }
+        
+        body.dark-mode .live-preview {
+            background: #2c2c2c;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .preview-title {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .cost-item {
+            border-bottom-color: rgba(255, 215, 0, 0.3);
+            color: #ffffff;
+        }
+        
+        body.dark-mode .cost-amount {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .modal-content {
+            background: #2c2c2c;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .modal-header h2 {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .summary-card {
+            background: #3a3a3a;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .summary-card h4 {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .breakdown-section {
+            background: rgba(255, 215, 0, 0.05);
+            border-color: #ffd700;
+        }
+        
+        body.dark-mode .breakdown-title {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .materials-table {
+            background: #3a3a3a;
+            border-color: #ffd700;
+        }
+        
+        body.dark-mode .materials-table th {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+        }
+        
+        body.dark-mode .materials-table td {
+            color: #ffffff;
+            border-bottom-color: rgba(255, 215, 0, 0.2);
+        }
+        
+        body.dark-mode .materials-table tr:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        body.dark-mode .admin-content {
+            background: #2c2c2c;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .admin-header h2 {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .category-section h3 {
+            color: #000000; /* Keep black text on yellow background */
+        }
+        
+        body.dark-mode .price-item {
+            background: rgba(255, 215, 0, 0.05);
+            border-color: #ffd700;
+        }
+        
+        body.dark-mode .price-item label {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .price-item input {
+            background: #1a1a1a;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .toggle-text {
+            color: #ffffff;
         }
         
         .logo {
@@ -887,6 +1277,10 @@
                 display: none; /* Hide badge completely on mobile */
             }
             
+            .header-right {
+                display: none; /* Hide entire right section on mobile */
+            }
+            
             .company-title {
                 font-size: 2.2em;
             }
@@ -1259,9 +1653,18 @@
                     <img src="logo.png" alt="ASF Design Logo" class="logo-image">
                 </a>
             </div>
-            <div class="header-badge">
-                Current Las Vegas Prices<br>
-                <small style="opacity: 0.8;">Updated 2025</small>
+            
+            <div class="header-right">
+                <!-- Dark Mode Toggle -->
+                <div class="dark-mode-toggle" onclick="toggleDarkMode()">
+                    <div class="toggle-icon" id="theme-icon">🌙</div>
+                    <span class="toggle-text" id="theme-text">Dark Mode</span>
+                </div>
+                
+                <div class="header-badge">
+                    Current Las Vegas Prices<br>
+                    <small style="opacity: 0.8;">Updated 2025</small>
+                </div>
             </div>
             
             <!-- Hidden Admin Link -->
@@ -2456,6 +2859,85 @@
             console.log('🏗️ ASF Calculator with Admin Panel loaded successfully');
             console.log('✨ Admin access: Click gear icon 5 times or Ctrl+Shift+A');
             console.log('🔑 Password: asf2025 or admin');
+            console.log('🌙 Dark mode available in top right corner');
+        });
+        
+        // Smooth Dissolve Dark Mode Toggle - No Overlays
+        function toggleDarkMode() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+            
+            // Check if elements exist
+            if (!icon || !text) {
+                console.error('Dark mode toggle elements not found');
+                return;
+            }
+            
+            // Add rotating animation to icon
+            icon.classList.add('rotating');
+            
+            // Toggle mode immediately for smooth dissolve
+            const isDark = body.classList.toggle('dark-mode');
+            
+            // Update toggle appearance with slight delay for smooth transition
+            setTimeout(() => {
+                if (isDark) {
+                    icon.textContent = '☀️';
+                    text.textContent = 'Light Mode';
+                } else {
+                    icon.textContent = '🌙';
+                    text.textContent = 'Dark Mode';
+                }
+            }, 200);
+            
+            // Save preference
+            try {
+                localStorage.setItem('darkMode', isDark);
+            } catch (e) {
+                console.warn('Could not save dark mode preference');
+            }
+            
+            // Remove icon rotation after animation
+            setTimeout(() => {
+                if (icon) {
+                    icon.classList.remove('rotating');
+                }
+            }, 600);
+            
+            // Visual feedback for toggle button
+            const toggle = document.querySelector('.dark-mode-toggle');
+            if (toggle) {
+                toggle.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    toggle.style.transform = '';
+                }, 150);
+            }
+        }
+        
+        // Load Dark Mode Preference - Fixed
+        function loadDarkModePreference() {
+            try {
+                const savedMode = localStorage.getItem('darkMode');
+                const icon = document.getElementById('theme-icon');
+                const text = document.getElementById('theme-text');
+                
+                if (savedMode === 'true' && icon && text) {
+                    document.body.classList.add('dark-mode');
+                    icon.textContent = '☀️';
+                    text.textContent = 'Light Mode';
+                }
+            } catch (e) {
+                console.warn('Could not load dark mode preference');
+            }
+        }
+        
+        // Initialize dark mode preference on page load - Fixed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wait a bit for elements to be fully rendered
+            setTimeout(() => {
+                loadDarkModePreference();
+            }, 100);
         });
         
         // Add some additional visual enhancements
