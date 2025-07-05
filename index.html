@@ -145,13 +145,16 @@
             height: 120px;
             width: auto;
             max-width: 400px;
-            filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
             transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            padding: 0;
         }
         
         .logo-image:hover {
             transform: scale(1.05);
-            filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.4));
+            filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
         }
         
         /* Text Logo Styling (fallback/alternative) */
@@ -1043,6 +1046,10 @@
                 <button type="button" class="details-btn" onclick="openDetailsModal()">
                     📊 View Detailed Breakdown
                 </button>
+                
+                <button type="button" class="details-btn" onclick="downloadEstimateImage()" style="margin-top: 10px; background: linear-gradient(45deg, #2196f3, #42a5f5);">
+                    📥 Download PNG Estimate
+                </button>
             </div>
         </div>
     </div>
@@ -1151,6 +1158,9 @@
             </div>
         </div>
     </div>
+    
+    <!-- Hidden Canvas for PNG Generation -->
+    <canvas id="estimate-canvas" style="display: none;"></canvas>
     
     <!-- Contact Footer Section -->
     <div class="contact-footer">
