@@ -140,6 +140,26 @@
             gap: 20px;
         }
         
+        /* Logo Image Styling */
+        .logo-image {
+            height: 80px;
+            width: auto;
+            max-width: 250px;
+            filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
+            transition: all 0.3s ease;
+        }
+        
+        .logo-image:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(5px 5px 10px rgba(0, 0, 0, 0.4));
+        }
+        
+        /* Text Logo Styling (fallback/alternative) */
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
         .logo-icon {
             width: 60px;
             height: 60px;
@@ -740,6 +760,11 @@
                 font-size: 2.2em;
             }
             
+            .logo-image {
+                height: 60px;
+                max-width: 200px;
+            }
+            
             .main-title h1 {
                 font-size: 2.5em;
             }
@@ -775,8 +800,14 @@
     <div class="header">
         <div class="header-content">
             <div class="logo">
+                <!-- Option 1: Use logo image (uncomment and add your image URL) -->
+                <!--
+                <img src="logo.png" alt="ASF Design Logo" class="logo-image">
+                -->
+                
+                <!-- Option 2: Current text-based logo (comment out when using image) -->
                 <div class="logo-icon">🏗️</div>
-                <div>
+                <div class="logo-text">
                     <div class="company-title">ASF-Design</div>
                     <div class="company-tagline">American Southwest Framing</div>
                 </div>
@@ -784,6 +815,11 @@
             <div class="header-badge">
                 Professional Calculator<br>
                 <small style="opacity: 0.8;">Las Vegas, Nevada</small>
+            </div>
+            
+            <!-- Hidden Admin Link -->
+            <div class="admin-access" id="admin-trigger" style="position: absolute; bottom: 5px; right: 20px; opacity: 0.1; font-size: 8px; cursor: pointer; user-select: none;">
+                ⚙️
             </div>
         </div>
     </div>
@@ -1014,6 +1050,111 @@
                 <button type="button" class="details-btn" onclick="openDetailsModal()">
                     📊 View Detailed Breakdown
                 </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Admin Price Update Panel (Hidden by default) -->
+    <div class="admin-panel" id="admin-panel" style="display: none;">
+        <div class="admin-content">
+            <div class="admin-header">
+                <h2>🔧 ASF Admin - Price Updates</h2>
+                <button class="close-admin" onclick="closeAdminPanel()">×</button>
+            </div>
+            
+            <div class="admin-warning">
+                <p><strong>⚠️ Admin Access:</strong> Update material prices here. Changes affect all calculator estimates.</p>
+            </div>
+            
+            <div class="price-categories">
+                <div class="category-section">
+                    <h3>🏗️ Foundation & Framing</h3>
+                    <div class="price-updates">
+                        <div class="price-item">
+                            <label>90lb Concrete Mix (per bag):</label>
+                            <input type="number" step="0.01" value="6.72" data-material="concrete">
+                            <button onclick="updatePrice('concrete', this.previousElementSibling.value)">Update</button>
+                        </div>
+                        <div class="price-item">
+                            <label>2x4x8 Premium Fir (per piece):</label>
+                            <input type="number" step="0.01" value="3.74" data-material="lumber_2x4">
+                            <button onclick="updatePrice('lumber_2x4', this.previousElementSibling.value)">Update</button>
+                        </div>
+                        <div class="price-item">
+                            <label>2x6x8 Douglas Fir (per piece):</label>
+                            <input type="number" step="0.01" value="7.98" data-material="lumber_2x6">
+                            <button onclick="updatePrice('lumber_2x6', this.previousElementSibling.value)">Update</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="category-section">
+                    <h3>🔩 Fasteners & Hardware</h3>
+                    <div class="price-updates">
+                        <div class="price-item">
+                            <label>3-1/2" Framing Nails 50lb (per box):</label>
+                            <input type="number" step="0.01" value="89.97" data-material="framing_nails">
+                            <button onclick="updatePrice('framing_nails', this.previousElementSibling.value)">Update</button>
+                        </div>
+                        <div class="price-item">
+                            <label>Roofing Nails 30lb (per box):</label>
+                            <input type="number" step="0.01" value="67.48" data-material="roofing_nails">
+                            <button onclick="updatePrice('roofing_nails', this.previousElementSibling.value)">Update</button>
+                        </div>
+                        <div class="price-item">
+                            <label>Drywall Screws 5lb (per box):</label>
+                            <input type="number" step="0.01" value="18.97" data-material="drywall_screws">
+                            <button onclick="updatePrice('drywall_screws', this.previousElementSibling.value)">Update</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="category-section">
+                    <h3>🏠 Building Materials</h3>
+                    <div class="price-updates">
+                        <div class="price-item">
+                            <label>GAF Roof Shingles (per bundle):</label>
+                            <input type="number" step="0.01" value="47.12" data-material="shingles">
+                            <button onclick="updatePrice('shingles', this.previousElementSibling.value)">Update</button>
+                        </div>
+                        <div class="price-item">
+                            <label>1/2" Drywall 4x8 (per sheet):</label>
+                            <input type="number" step="0.01" value="23.98" data-material="drywall">
+                            <button onclick="updatePrice('drywall', this.previousElementSibling.value)">Update</button>
+                        </div>
+                        <div class="price-item">
+                            <label>Laminate Flooring (per sq ft):</label>
+                            <input type="number" step="0.01" value="2.48" data-material="flooring">
+                            <button onclick="updatePrice('flooring', this.previousElementSibling.value)">Update</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="category-section">
+                    <h3>⚡ Electrical & Plumbing</h3>
+                    <div class="price-updates">
+                        <div class="price-item">
+                            <label>12 AWG Romex 250ft (per roll):</label>
+                            <input type="number" step="0.01" value="146.00" data-material="electrical">
+                            <button onclick="updatePrice('electrical', this.previousElementSibling.value)">Update</button>
+                        </div>
+                        <div class="price-item">
+                            <label>R-15 Insulation (per sq ft):</label>
+                            <input type="number" step="0.01" value="1.12" data-material="insulation">
+                            <button onclick="updatePrice('insulation', this.previousElementSibling.value)">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-actions">
+                <button class="save-all-btn" onclick="saveAllPrices()">💾 Save All Changes</button>
+                <button class="reset-btn" onclick="resetToDefaults()">🔄 Reset to Defaults</button>
+                <button class="export-btn" onclick="exportPrices()">📤 Export Price List</button>
+            </div>
+            
+            <div class="last-updated">
+                <p>Last updated: <span id="last-update-time">Never</span></p>
             </div>
         </div>
     </div>
@@ -1758,11 +1899,44 @@
         document.addEventListener('DOMContentLoaded', function() {
             calculator = new ASFCalculator();
             
+            // Setup admin access trigger
+            let clickCount = 0;
+            let clickTimer = null;
+            
+            document.getElementById('admin-trigger').addEventListener('click', function() {
+                clickCount++;
+                
+                if (clickCount === 1) {
+                    clickTimer = setTimeout(() => {
+                        clickCount = 0;
+                    }, 2000);
+                } else if (clickCount === 5) {
+                    // 5 clicks within 2 seconds opens admin panel
+                    clearTimeout(clickTimer);
+                    clickCount = 0;
+                    
+                    const password = prompt('🔐 Enter admin password:');
+                    if (password === 'asf2025' || password === 'admin') {
+                        openAdminPanel();
+                    } else if (password !== null) {
+                        alert('❌ Incorrect password');
+                    }
+                }
+            });
+            
+            // Load any saved admin prices
+            updateCalculatorPrices();
+            
             // Close modal when clicking outside
             window.addEventListener('click', function(e) {
                 const modal = document.getElementById('details-modal');
                 if (e.target === modal) {
                     closeModal();
+                }
+                
+                const adminPanel = document.getElementById('admin-panel');
+                if (e.target === adminPanel) {
+                    closeAdminPanel();
                 }
             });
             
@@ -1770,14 +1944,30 @@
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     const modal = document.getElementById('details-modal');
+                    const adminPanel = document.getElementById('admin-panel');
+                    
                     if (modal.style.display === 'block') {
                         closeModal();
+                    } else if (adminPanel.style.display === 'block') {
+                        closeAdminPanel();
+                    }
+                }
+                
+                // Secret keyboard shortcut: Ctrl+Shift+A
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    e.preventDefault();
+                    const password = prompt('🔐 Enter admin password:');
+                    if (password === 'asf2025' || password === 'admin') {
+                        openAdminPanel();
+                    } else if (password !== null) {
+                        alert('❌ Incorrect password');
                     }
                 }
             });
             
-            console.log('🏗️ ASF Calculator with Enhanced Blur Effects loaded successfully');
-            console.log('✨ Features: Smooth transitions, cascading updates, shimmer effects');
+            console.log('🏗️ ASF Calculator with Admin Panel loaded successfully');
+            console.log('✨ Admin access: Click gear icon 5 times or Ctrl+Shift+A');
+            console.log('🔑 Password: asf2025 or admin');
         });
         
         // Add some additional visual enhancements
