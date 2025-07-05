@@ -879,42 +879,14 @@
             }
             
             .logo-image {
-                height: 180px; /* Much bigger logo on mobile */
-                max-width: 450px;
-                margin-bottom: 5px; /* Small gap before contact bar */
+                height: 200px; /* Even bigger logo on mobile */
+                max-width: 500px;
+                margin-bottom: -5px; /* Pull closer to yellow line */
             }
             
-            /* Mobile Contact Bar */
+            /* Hide Contact Bar Completely on Mobile */
             .contact-bar {
-                grid-template-columns: 1fr;
-                gap: 0;
-                padding: 10px 0;
-            }
-            
-            .contact-bar-item {
-                padding: 12px 20px;
-                justify-content: flex-start;
-                gap: 15px;
-            }
-            
-            .contact-bar-item:not(:last-child)::after {
-                display: none; /* Remove vertical separators */
-            }
-            
-            .contact-bar-item:not(:last-child) {
-                border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-            }
-            
-            .contact-bar-icon {
-                font-size: 18px;
-            }
-            
-            .contact-bar-label {
-                font-size: 11px;
-            }
-            
-            .contact-bar-value {
-                font-size: 13px;
+                display: none;
             }
             
             .main-title h1 {
