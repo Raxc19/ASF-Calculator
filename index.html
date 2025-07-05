@@ -704,6 +704,19 @@
             box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
         }
         
+        /* PNG Download Button - Same Yellow Style */
+        .png-download-btn {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+            border: 2px solid #ffd700;
+        }
+        
+        .png-download-btn:hover {
+            background: linear-gradient(45deg, #ffed4e, #ffd700);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+        }
+        
         /* Modal Styles */
         .modal {
             display: none;
@@ -1519,7 +1532,7 @@
                     📊 View Detailed Breakdown
                 </button>
                 
-                <button type="button" class="details-btn" onclick="downloadEstimateImage()" style="margin-top: 10px; background: linear-gradient(45deg, #2196f3, #42a5f5);">
+                <button type="button" class="details-btn png-download-btn" onclick="downloadEstimateImage()" style="margin-top: 10px;">
                     📥 Download PNG Estimate
                 </button>
             </div>
