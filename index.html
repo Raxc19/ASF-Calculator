@@ -769,7 +769,8 @@
             .header-content {
                 flex-direction: column;
                 text-align: center;
-                gap: 20px;
+                gap: 15px;
+                padding: 0 15px;
             }
             
             .company-title {
@@ -777,16 +778,62 @@
             }
             
             .logo-image {
-                height: 120px;
-                max-width: 350px;
+                height: 100px;
+                max-width: 280px;
+            }
+            
+            .header-badge {
+                font-size: 0.9em;
+                padding: 8px 15px;
             }
             
             .main-title h1 {
-                font-size: 2.5em;
+                font-size: 2.2em;
+                line-height: 1.2;
+            }
+            
+            .main-title p {
+                font-size: 1.1em;
             }
             
             .calculator-form {
-                padding: 30px 25px;
+                padding: 25px 20px;
+                margin: 0 10px;
+            }
+            
+            .form-section input, .form-section select {
+                padding: 20px 15px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                border-radius: 8px;
+            }
+            
+            .house-details {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+            
+            .detail-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+            
+            .detail-row label {
+                min-width: auto;
+                font-size: 1em;
+                margin-bottom: 5px;
+            }
+            
+            .detail-row select, .detail-row input {
+                padding: 15px 12px;
+                font-size: 16px;
+                min-height: 48px; /* Touch-friendly */
+            }
+            
+            .pricing-tiers {
+                padding: 20px 15px;
+                margin: 20px 0;
             }
             
             .tier-cards {
@@ -794,20 +841,282 @@
                 gap: 15px;
             }
             
-            .detail-row {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
+            .tier-card {
+                padding: 20px 15px;
+                margin-bottom: 10px;
             }
             
-            .detail-row label {
-                min-width: auto;
+            .tier-card h4 {
+                font-size: 1.2em;
+            }
+            
+            .options-section {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+            
+            .checkbox-group {
+                padding: 20px 15px;
+                margin-bottom: 15px;
+                border-radius: 10px;
+                min-height: 60px; /* Better touch target */
+            }
+            
+            .checkbox-group input[type="checkbox"] {
+                width: 24px;
+                height: 24px;
+                margin-right: 15px;
+            }
+            
+            .checkbox-group label {
+                font-size: 1.1em;
+                line-height: 1.4;
+            }
+            
+            .calculate-btn {
+                padding: 18px 15px;
+                font-size: 1.3em;
+                margin-top: 20px;
+                min-height: 60px;
+            }
+            
+            .live-preview {
+                position: relative;
+                top: 0;
+                margin: 20px 10px 0 10px;
+                padding: 20px 15px;
+            }
+            
+            .preview-title {
+                font-size: 1.3em;
+                margin-bottom: 20px;
+            }
+            
+            .cost-item {
+                padding: 18px 0;
+                font-size: 1em;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            
+            .cost-item:last-child {
+                padding: 20px 15px;
+                font-size: 1.2em;
+                text-align: center;
+            }
+            
+            .details-btn {
+                padding: 15px 20px;
+                font-size: 1em;
+                margin-top: 15px;
+                min-height: 50px;
             }
             
             .modal-content {
                 width: 95%;
-                padding: 20px;
-                margin: 5% auto;
+                padding: 20px 15px;
+                margin: 2% auto;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .modal-header h2 {
+                font-size: 1.8em;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .summary-card {
+                padding: 20px 15px;
+            }
+            
+            .amount {
+                font-size: 1.8em;
+            }
+            
+            .breakdown-section {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+            
+            .materials-table {
+                font-size: 14px;
+            }
+            
+            .materials-table th, .materials-table td {
+                padding: 10px 8px;
+            }
+            
+            .contact-footer-content {
+                grid-template-columns: 1fr;
+                gap: 25px;
+                text-align: center;
+                padding: 0 15px;
+            }
+            
+            .contact-item {
+                justify-content: center;
+                text-align: center;
+            }
+            
+            .contact-icon-box {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .contact-icon {
+                font-size: 20px;
+            }
+            
+            .contact-value {
+                font-size: 16px;
+            }
+            
+            .admin-content {
+                padding: 20px 15px;
+                margin: 10px;
+            }
+            
+            .price-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 15px;
+                text-align: center;
+            }
+            
+            .price-item input {
+                max-width: 150px;
+                margin: 0 auto;
+            }
+            
+            .admin-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .admin-actions button {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+        
+        /* Tablet-specific optimizations */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .calculator-form {
+                padding: 40px 35px;
+            }
+            
+            .live-preview {
+                position: relative;
+                top: 0;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            
+            .tier-cards {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+        
+        /* Extra small mobile devices */
+        @media (max-width: 480px) {
+            .header {
+                padding: 5px 0;
+            }
+            
+            .container {
+                padding: 10px 10px 30px 10px;
+            }
+            
+            .main-title h1 {
+                font-size: 1.8em;
+            }
+            
+            .main-title p {
+                font-size: 1em;
+            }
+            
+            .calculator-form {
+                padding: 20px 15px;
+                margin: 0 5px;
+            }
+            
+            .form-section label {
+                font-size: 1.1em;
+            }
+            
+            .form-section input, .form-section select {
+                padding: 18px 12px;
+                font-size: 16px;
+            }
+            
+            .logo-image {
+                height: 80px;
+                max-width: 240px;
+            }
+            
+            .tier-card {
+                padding: 15px 12px;
+            }
+            
+            .checkbox-group {
+                padding: 18px 12px;
+                min-height: 55px;
+            }
+            
+            .cost-item {
+                font-size: 0.95em;
+                padding: 15px 0;
+            }
+            
+            .cost-item:last-child {
+                font-size: 1.1em;
+                padding: 18px 12px;
+            }
+        }
+        
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .tier-card, .checkbox-group, .details-btn, .calculate-btn {
+                transition: all 0.2s ease;
+            }
+            
+            .tier-card:active {
+                transform: scale(0.98);
+                background: rgba(255, 215, 0, 0.25);
+            }
+            
+            .checkbox-group:active {
+                transform: scale(0.98);
+                background: rgba(255, 215, 0, 0.3);
+            }
+            
+            .calculate-btn:active, .details-btn:active {
+                transform: scale(0.98) translateY(2px);
+            }
+            
+            /* Larger touch targets */
+            input[type="checkbox"] {
+                min-width: 24px;
+                min-height: 24px;
+            }
+            
+            select, input {
+                min-height: 48px;
+            }
+            
+            button {
+                min-height: 48px;
+                padding: 12px 20px;
             }
         }
     </style>
