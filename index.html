@@ -140,6 +140,17 @@
             gap: 20px;
         }
         
+        /* Logo Link Styling */
+        .logo-link {
+            display: inline-block;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-link:hover {
+            transform: scale(1.02);
+        }
+        
         /* Logo Image Styling */
         .logo-image {
             height: 160px;
@@ -150,11 +161,11 @@
             background: transparent;
             border: none;
             padding: 0;
+            cursor: pointer;
         }
         
         .logo-image:hover {
-            transform: scale(1.05);
-            filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(3px 3px 8px rgba(0, 0, 0, 0.3));
         }
         
         /* Text Logo Styling (fallback/alternative) */
@@ -803,10 +814,10 @@
     <div class="header">
         <div class="header-content">
             <div class="logo">
-                <!-- ASF Design Logo Image -->
-                <img src="logo.png" alt="ASF Design Logo" class="logo-image">
-                
-                <!-- Text logo removed - now using image logo -->
+                <!-- Clickable ASF Design Logo -->
+                <a href="https://aswframing.com/" target="_blank" rel="noopener noreferrer" class="logo-link">
+                    <img src="logo.png" alt="ASF Design Logo" class="logo-image">
+                </a>
             </div>
             <div class="header-badge">
                 Professional Calculator<br>
