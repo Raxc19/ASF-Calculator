@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASF Admin Panel - Price Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .sidebar {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 30px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .sidebar h3 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        
+        .nav-item {
+            display: block;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateX(5px);
+            border-color: #ffd700;
+        }
+        
+        .main-content {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 40px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .section-title {
+            color: #ffd700;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+        
+        .price-categories {
+            display: grid;
+            gap: 30px;
+        }
+        
+        .category-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .category-header {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+            padding: 20px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .price-items {
+            padding: 20px;
+            display: grid;
+            gap: 15px;
+        }
+        
+        .price-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 15px;
+            align-items: center;
+            padding: 20px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .price-item:hover {
+            background: rgba(255, 215, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        }
+        
+        .price-item label {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        
+        .price-input {
+            background: #1a1a1a;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #ffffff;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .price-input:focus {
+            outline: none;
+            background: #333333;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+        
+        .update-btn {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+        
+        .update-btn:hover {
+            background: linear-gradient(45deg, #66bb6a, #4caf50);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+        
+        .save-btn {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(45deg, #f44336, #e57373);
+            color: #ffffff;
+        }
+        
+        .export-btn {
+            background: linear-gradient(45deg, #2196f3, #64b5f6);
+            color: #ffffff;
+        }
+        
+        .sync-btn {
+            background: linear-gradient(45deg, #9c27b0, #ba68c8);
+            color: #ffffff;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ffd700;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .status-item {
+            margin-bottom: 10px;
+        }
+        
+        .status-success {
+            color: #4caf50;
+            font-weight: bold;
+        }
+        
+        .status-warning {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        
+        .status-error {
+            color: #f44336;
+            font-weight: bold;
+        }
+        
+        .backup-section {
+            margin-top: 40px;
+        }
+        
+        .backup-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .backup-info {
+            flex: 1;
+        }
+        
+        .backup-date {
+            color: #ffd700;
+            font-weight: bold;
+        }
+        
+        .backup-size {
+            color: #aaaaaa;
+            font-size: 0.9em;
+        }
+        
+        .restore-btn {
+            background: linear-gradient(45deg, #ff9800, #ffb74d);
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .restore-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(255, 152, 0, 0.4);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: #ffd700;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: #ffffff;
+            font-weight: bold;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+        }
+        
+        .notification.error {
+            background: linear-gradient(45deg, #f44336, #e57373);
+        }
+        
+        .notification.warning {
+            background: linear-gradient(45deg, #ff9800, #ffb74d);
+        }
+        
+        @media (max-width: 768px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .sidebar {
+                position: relative;
+                top: 0;
+            }
+            
+            .price-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 ASF Design Admin Panel</h1>
+        <p>Professional Construction Cost Management System</p>
+    </div>
+
+    <div class="container">
+        <div class="admin-grid">
+            <div class="sidebar">
+                <h3>📋 Admin Menu</h3>
+                <div class="nav-item active" onclick="showSection('dashboard')">
+                    📊 Dashboard
+                </div>
+                <div class="nav-item" onclick="showSection('prices')">
+                    💰 Price Management
+                </div>
+                <div class="nav-item" onclick="showSection('backups')">
+                    💾 Backups & Sync
+                </div>
+                <div class="nav-item" onclick="showSection('settings')">
+                    ⚙️ Settings
+                </div>
+                <div class="nav-item" onclick="openMainSite()">
+                    🏗️ View Calculator
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- Dashboard Section -->
+                <div class="section active" id="dashboard">
+                    <div class="section-title">📊 System Dashboard</div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number" id="total-materials">142</div>
+                            <div class="stat-label">Total Materials</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="last-sync">2 hrs</div>
+                            <div class="stat-label">Last Sync</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="avg-cost">$87</div>
+                            <div class="stat-label">Avg Cost/Sq Ft</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="price-updates">23</div>
+                            <div class="stat-label">Recent Updates</div>
+                        </div>
+                    </div>
+
+                    <div class="status-bar">
+                        <div class="status-item">
+                            <span class="status-success">✅ System Status: Online</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-success">✅ Price Database: Connected</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-warning">⚠️ Last Backup: 6 hours ago</span>
+                        </div>
+                        <div class="status-item">
+                            Last Updated: <span id="last-update-display">Never</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price Management Section -->
+                <div class="section" id="prices">
+                    <div class="section-title">💰 Price Management</div>
+                    
+                    <div class="price-categories">
+                        <div class="category-section">
+                            <div class="category-header">🏗️ Foundation & Framing</div>
+                            <div class="price-items">
+                                <div class="price-item">
+                                    <label>90lb Concrete Mix (per bag):</label>
+                                    <input type="number" class="price-input" step="0.01" value="6.72" data-material="concrete">
+                                    <button class="update-btn" onclick="updatePrice('concrete', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>2x4x8 Premium Fir (per piece):</label>
+                                    <input type="number" class="price-input" step="0.01" value="3.74" data-material="lumber_2x4">
+                                    <button class="update-btn" onclick="updatePrice('lumber_2x4', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>2x6x8 Douglas Fir (per piece):</label>
+                                    <input type="number" class="price-input" step="0.01" value="7.98" data-material="lumber_2x6">
+                                    <button class="update-btn" onclick="updatePrice('lumber_2x6', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>2x8x16 Floor Joists (per piece):</label>
+                                    <input type="number" class="price-input" step="0.01" value="18.50" data-material="floor_joists">
+                                    <button class="update-btn" onclick="updatePrice('floor_joists', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>#4 Rebar 20ft (per piece):</label>
+                                    <input type="number" class="price-input" step="0.01" value="10.94" data-material="rebar">
+                                    <button class="update-btn" onclick="updatePrice('rebar', this.previousElementSibling.value)">Update</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="category-section">
+                            <div class="category-header">🔩 Fasteners & Hardware</div>
+                            <div class="price-items">
+                                <div class="price-item">
+                                    <label>3-1/2" Framing Nails 50lb (per box):</label>
+                                    <input type="number" class="price-input" step="0.01" value="89.97" data-material="framing_nails">
+                                    <button class="update-btn" onclick="updatePrice('framing_nails', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>1-1/4" Roofing Nails 30lb (per box):</label>
+                                    <input type="number" class="price-input" step="0.01" value="67.48" data-material="roofing_nails">
+                                    <button class="update-btn" onclick="updatePrice('roofing_nails', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>Drywall Screws 5lb (per box):</label>
+                                    <input type="number" class="price-input" step="0.01" value="18.97" data-material="drywall_screws">
+                                    <button class="update-btn" onclick="updatePrice('drywall_screws', this.previousElementSibling.value)">Update</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="category-section">
+                            <div class="category-header">🏠 Building Materials</div>
+                            <div class="price-items">
+                                <div class="price-item">
+                                    <label>GAF Timberline HDZ Shingles (per bundle):</label>
+                                    <input type="number" class="price-input" step="0.01" value="47.12" data-material="shingles">
+                                    <button class="update-btn" onclick="updatePrice('shingles', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>Roof Underlayment (per roll):</label>
+                                    <input type="number" class="price-input" step="0.01" value="89.50" data-material="roof_underlayment">
+                                    <button class="update-btn" onclick="updatePrice('roof_underlayment', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>1/2" Drywall 4x8 (per sheet):</label>
+                                    <input type="number" class="price-input" step="0.01" value="23.98" data-material="drywall">
+                                    <button class="update-btn" onclick="updatePrice('drywall', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>Joint Compound 50lb (per bucket):</label>
+                                    <input type="number" class="price-input" step="0.01" value="15.75" data-material="joint_compound">
+                                    <button class="update-btn" onclick="updatePrice('joint_compound', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>Laminate Flooring (per sq ft):</label>
+                                    <input type="number" class="price-input" step="0.01" value="2.48" data-material="flooring">
+                                    <button class="update-btn" onclick="updatePrice('flooring', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>Flooring Underlayment (per sq ft):</label>
+                                    <input type="number" class="price-input" step="0.01" value="0.75" data-material="flooring_underlayment">
+                                    <button class="update-btn" onclick="updatePrice('flooring_underlayment', this.previousElementSibling.value)">Update</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="category-section">
+                            <div class="category-header">⚡ Electrical & Plumbing</div>
+                            <div class="price-items">
+                                <div class="price-item">
+                                    <label>12 AWG Romex 250ft (per roll):</label>
+                                    <input type="number" class="price-input" step="0.01" value="146.00" data-material="electrical">
+                                    <button class="update-btn" onclick="updatePrice('electrical', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>GFCI Outlets (per piece):</label>
+                                    <input type="number" class="price-input" step="0.01" value="18.50" data-material="gfci_outlets">
+                                    <button class="update-btn" onclick="updatePrice('gfci_outlets', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>3/4" Copper Pipe (per piece):</label>
+                                    <input type="number" class="price-input" step="0.01" value="28.75" data-material="copper_pipe">
+                                    <button class="update-btn" onclick="updatePrice('copper_pipe', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>1/2" PEX Tubing 100ft (per roll):</label>
+                                    <input type="number" class="price-input" step="0.01" value="89.00" data-material="pex_tubing">
+                                    <button class="update-btn" onclick="updatePrice('pex_tubing', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>R-15 Wall Insulation (per sq ft):</label>
+                                    <input type="number" class="price-input" step="0.01" value="1.12" data-material="insulation">
+                                    <button class="update-btn" onclick="updatePrice('insulation', this.previousElementSibling.value)">Update</button>
+                                </div>
+                                <div class="price-item">
+                                    <label>R-30 Blown-In Insulation (per bag):</label>
+                                    <input type="number" class="price-input" step="0.01" value="12.50" data-material="blown_insulation">
+                                    <button class="update-btn" onclick="updatePrice('blown_insulation', this.previousElementSibling.value)">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="action-btn save-btn" onclick="saveAllPrices()">
+                            💾 Save All Changes
+                        </button>
+                        <button class="action-btn reset-btn" onclick="resetToDefaults()">
+                            🔄 Reset to Defaults
+                        </button>
+                        <button class="action-btn export-btn" onclick="exportPrices()">
+                            📤 Export Price List
+                        </button>
+                        <button class="action-btn sync-btn" onclick="syncToCalculator()">
+                            🔄 Sync to Calculator
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Backups Section -->
+                <div class="section" id="backups">
+                    <div class="section-title">💾 Backups & Synchronization</div>
+                    
+                    <div class="action-buttons">
+                        <button class="action-btn save-btn" onclick="createBackup()">
+                            💾 Create Backup
+                        </button>
+                        <button class="action-btn sync-btn" onclick="autoSync()">
+                            🔄 Auto Sync
+                        </button>
+                        <button class="action-btn export-btn" onclick="importPrices()">
+                            📥 Import Prices
+                        </button>
+                    </div>
+
+                    <div class="backup-section">
+                        <h3 style="color: #ffd700; margin-bottom: 20px;">📁 Recent Backups</h3>
+                        <div id="backup-list">
+                            <div class="backup-item">
+                                <div class="backup-info">
+                                    <div class="backup-date">2025-01-07 14:30:22</div>
+                                    <div class="backup-size">2.4 KB • Auto backup</div>
+                                </div>
+                                <button class="restore-btn" onclick="restoreBackup('2025-01-07-auto')">
+                                    Restore
+                                </button>
+                            </div>
+                            <div class="backup-item">
+                                <div class="backup-info">
+                                    <div class="backup-date">2025-01-07 09:15:45</div>
+                                    <div class="backup-size">2.3 KB • Manual backup</div>
+                                </div>
+                                <button class="restore-btn" onclick="restoreBackup('2025-01-07-manual')">
+                                    Restore
+                                </button>
+                            </div>
+                            <div class="backup-item">
+                                <div class="backup-info">
+                                    <div class="backup-date">2025-01-06 18:45:12</div>
+                                    <div class="backup-size">2.3 KB • Daily backup</div>
+                                </div>
+                                <button class="restore-btn" onclick="restoreBackup('2025-01-06-daily')">
+                                    Restore
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div class="section" id="settings">
+                    <div class="section-title">⚙️ System Settings</div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Auto Sync</div>
+                            <div class="stat-number">
+                                <label style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                    <input type="checkbox" id="auto-sync" checked style="width: 20px; height: 20px;">
+                                    <span>Enabled</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Backup Frequency</div>
+                            <div class="stat-number">
+                                <select style="background: #000; color: #fff; border: 1px solid #ffd700; padding: 5px; border-radius: 5px;">
+                                    <option>Daily</option>
+                                    <option>Weekly</option>
+                                    <option>Manual</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Calculator URL</div>
+                            <div class="stat-number" style="font-size: 0.8em;">
+                                <input type="text" value="https://raxc19.github.io/ASF-Calculator/" style="background: #000; color: #fff; border: 1px solid #ffd700; padding: 5px; border-radius: 5px; width: 100%;">
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">API Key</div>
+                            <div class="stat-number" style="font-size: 0.6em;">
+                                ••••••••••••••••
+                                <button style="margin-left: 10px; padding: 5px 10px; background: #ffd700; color: #000; border: none; border-radius: 5px; cursor: pointer;">
+                                    Regenerate
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="action-btn save-btn" onclick="saveSettings()">
