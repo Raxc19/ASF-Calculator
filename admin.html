@@ -1204,6 +1204,24 @@
             throw new Error('No valid extraction method found');
         }
 
+        function updatePriceInput(price) {
+            // Update the price input with the scraped price
+            const priceInput = document.querySelector(`[data-material="${currentScrapeMaterial}"]`);
+            if (priceInput) {
+                priceInput.value = price.toFixed(2);
+                // Add visual feedback
+                priceInput.style.background = 'rgba(76, 175, 80, 0.2)';
+                priceInput.style.borderColor = '#4caf50';
+                setTimeout(() => {
+                    priceInput.style.background = '#1a1a1a';
+                    priceInput.style.borderColor = '#ffd700';
+                }, 2000);
+                console.log('✅ Price input updated:', price);
+            } else {
+                console.warn('❌ Price input not found for material:', currentScrapeMaterial);
+            }
+        }
+
         // NEW WORKING FUNCTIONS (bypass old validation)
         async function testPriceScrapingNew() {
             const url = document.getElementById('scrape-url').value.trim();
