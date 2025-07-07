@@ -161,9 +161,28 @@
             gap: 15px;
         }
         
+        .scrape-btn {
+            background: linear-gradient(45deg, #2196f3, #64b5f6);
+            color: #ffffff;
+            border: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 40px;
+            font-size: 16px;
+        }
+        
+        .scrape-btn:hover {
+            background: linear-gradient(45deg, #64b5f6, #2196f3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+        }
+        
         .price-item {
             display: grid;
-            grid-template-columns: 2fr 1fr auto;
+            grid-template-columns: 2fr 1fr auto auto;
             gap: 15px;
             align-items: center;
             padding: 20px;
@@ -171,6 +190,124 @@
             border: 1px solid rgba(255, 215, 0, 0.3);
             border-radius: 12px;
             transition: all 0.3s ease;
+        }
+        
+        /* Scrape Setup Modal */
+        .scrape-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            overflow-y: auto;
+        }
+        
+        .scrape-modal-content {
+            background: #2c2c2c;
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 800px;
+            width: 90%;
+            border: 3px solid #ffd700;
+            color: #ffffff;
+        }
+        
+        .scrape-modal h3 {
+            color: #ffd700;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+        
+        .scrape-form {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .scrape-input {
+            background: #1a1a1a;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: #ffffff;
+            font-size: 1em;
+            width: 100%;
+        }
+        
+        .scrape-input:focus {
+            outline: none;
+            background: #333333;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+        
+        .scrape-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .scrape-save-btn {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scrape-cancel-btn {
+            background: linear-gradient(45deg, #f44336, #e57373);
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scrape-test-btn {
+            background: linear-gradient(45deg, #ff9800, #ffb74d);
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scrape-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .scrape-status.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+        }
+        
+        .scrape-status.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+        
+        .scrape-status.testing {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid #ff9800;
+            color: #ff9800;
         }
         
         .price-item:hover {
@@ -474,26 +611,31 @@
                                     <label>90lb Concrete Mix (per bag):</label>
                                     <input type="number" class="price-input" step="0.01" value="6.72" data-material="concrete">
                                     <button class="update-btn" onclick="updatePrice('concrete', this.previousElementSibling.value)">Update</button>
+                                    <button class="scrape-btn" onclick="showScrapeModal('concrete')" title="Set up auto-scraping">🌐</button>
                                 </div>
                                 <div class="price-item">
                                     <label>2x4x8 Premium Fir (per piece):</label>
                                     <input type="number" class="price-input" step="0.01" value="3.74" data-material="lumber_2x4">
                                     <button class="update-btn" onclick="updatePrice('lumber_2x4', this.previousElementSibling.value)">Update</button>
+                                    <button class="scrape-btn" onclick="showScrapeModal('lumber_2x4')" title="Set up auto-scraping">🌐</button>
                                 </div>
                                 <div class="price-item">
                                     <label>2x6x8 Douglas Fir (per piece):</label>
                                     <input type="number" class="price-input" step="0.01" value="7.98" data-material="lumber_2x6">
                                     <button class="update-btn" onclick="updatePrice('lumber_2x6', this.previousElementSibling.value)">Update</button>
+                                    <button class="scrape-btn" onclick="showScrapeModal('lumber_2x6')" title="Set up auto-scraping">🌐</button>
                                 </div>
                                 <div class="price-item">
                                     <label>2x8x16 Floor Joists (per piece):</label>
                                     <input type="number" class="price-input" step="0.01" value="18.50" data-material="floor_joists">
                                     <button class="update-btn" onclick="updatePrice('floor_joists', this.previousElementSibling.value)">Update</button>
+                                    <button class="scrape-btn" onclick="showScrapeModal('floor_joists')" title="Set up auto-scraping">🌐</button>
                                 </div>
                                 <div class="price-item">
                                     <label>#4 Rebar 20ft (per piece):</label>
                                     <input type="number" class="price-input" step="0.01" value="10.94" data-material="rebar">
                                     <button class="update-btn" onclick="updatePrice('rebar', this.previousElementSibling.value)">Update</button>
+                                    <button class="scrape-btn" onclick="showScrapeModal('rebar')" title="Set up auto-scraping">🌐</button>
                                 </div>
                             </div>
                         </div>
@@ -712,11 +854,327 @@
         </div>
     </div>
 
+    <!-- Price Scraping Setup Modal -->
+    <div class="scrape-modal" id="scrape-modal">
+        <div class="scrape-modal-content">
+            <h3>🌐 Setup Auto Price Scraping</h3>
+            <p style="color: #aaa; text-align: center; margin-bottom: 30px;">
+                Configure automatic price updates from supplier websites
+            </p>
+            
+            <div class="scrape-form">
+                <div>
+                    <label style="color: #ffd700; font-weight: bold; margin-bottom: 10px; display: block;">
+                        Material: <span id="scrape-material-name"></span>
+                    </label>
+                </div>
+                
+                <div>
+                    <label style="color: #ffd700; font-weight: bold; margin-bottom: 10px; display: block;">
+                        Website URL:
+                    </label>
+                    <input type="url" id="scrape-url" class="scrape-input" 
+                           placeholder="https://www.homedepot.com/p/product-page" 
+                           title="Enter the full URL of the product page">
+                </div>
+                
+                <div>
+                    <label style="color: #ffd700; font-weight: bold; margin-bottom: 10px; display: block;">
+                        Price Selector (CSS):
+                    </label>
+                    <input type="text" id="scrape-selector" class="scrape-input" 
+                           placeholder=".price-display, #price, [data-price]" 
+                           title="CSS selector for the price element">
+                </div>
+                
+                <div>
+                    <label style="color: #ffd700; font-weight: bold; margin-bottom: 10px; display: block;">
+                        Price Attribute (optional):
+                    </label>
+                    <input type="text" id="scrape-attribute" class="scrape-input" 
+                           placeholder="data-price, content, value" 
+                           title="HTML attribute containing price (leave empty for text content)">
+                </div>
+                
+                <div>
+                    <label style="color: #ffd700; font-weight: bold; margin-bottom: 10px; display: block;">
+                        Update Frequency:
+                    </label>
+                    <select id="scrape-frequency" class="scrape-input">
+                        <option value="manual">Manual Only</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="hourly">Hourly (Premium)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="scrape-status" id="scrape-status" style="display: none;"></div>
+            
+            <div class="scrape-actions">
+                <button class="scrape-test-btn" onclick="testPriceScraping()">🧪 Test Scraping</button>
+                <button class="scrape-save-btn" onclick="saveScrapeConfig()">💾 Save Config</button>
+                <button class="scrape-cancel-btn" onclick="closeScrapeModal()">❌ Cancel</button>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: rgba(255, 215, 0, 0.1); border-radius: 10px; border: 1px solid #ffd700;">
+                <h4 style="color: #ffd700; margin-bottom: 15px;">📋 How to Find CSS Selectors:</h4>
+                <ol style="color: #ccc; line-height: 1.6;">
+                    <li><strong>Right-click</strong> on the price on the website</li>
+                    <li>Select <strong>"Inspect Element"</strong></li>
+                    <li>Right-click the highlighted HTML element</li>
+                    <li>Choose <strong>"Copy" → "Copy selector"</strong></li>
+                    <li>Paste the selector in the field above</li>
+                </ol>
+                <p style="color: #aaa; margin-top: 15px; font-size: 0.9em;">
+                    <strong>Examples:</strong><br>
+                    • Home Depot: <code>.price-format__main-price</code><br>
+                    • Lowe's: <code>[data-testid="price-display"]</code><br>
+                    • Menards: <code>.price-current</code>
+                </p>
+            </div>
+        </div>
+    </div>
+
     <!-- Notification Container -->
     <div id="notification-container"></div>
 
     <script>
-        // Admin Panel Functions for GitHub Pages
+        let currentScrapeMaterial = null;
+
+        function showScrapeModal(materialKey) {
+            currentScrapeMaterial = materialKey;
+            const modal = document.getElementById('scrape-modal');
+            const materialName = document.getElementById('scrape-material-name');
+            
+            // Set material name
+            materialName.textContent = materialKey.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            
+            // Load existing config if any
+            const scrapeConfigs = JSON.parse(localStorage.getItem('asfScrapeConfigs') || '{}');
+            const config = scrapeConfigs[materialKey];
+            
+            if (config) {
+                document.getElementById('scrape-url').value = config.url || '';
+                document.getElementById('scrape-selector').value = config.selector || '';
+                document.getElementById('scrape-attribute').value = config.attribute || '';
+                document.getElementById('scrape-frequency').value = config.frequency || 'manual';
+            } else {
+                // Clear form
+                document.getElementById('scrape-url').value = '';
+                document.getElementById('scrape-selector').value = '';
+                document.getElementById('scrape-attribute').value = '';
+                document.getElementById('scrape-frequency').value = 'manual';
+            }
+            
+            // Hide status
+            document.getElementById('scrape-status').style.display = 'none';
+            
+            modal.style.display = 'block';
+        }
+
+        function closeScrapeModal() {
+            document.getElementById('scrape-modal').style.display = 'none';
+            currentScrapeMaterial = null;
+        }
+
+        async function testPriceScraping() {
+            const url = document.getElementById('scrape-url').value.trim();
+            const selector = document.getElementById('scrape-selector').value.trim();
+            const attribute = document.getElementById('scrape-attribute').value.trim();
+            const status = document.getElementById('scrape-status');
+            
+            if (!url || !selector) {
+                showScrapeStatus('❌ Please enter both URL and CSS selector', 'error');
+                return;
+            }
+            
+            showScrapeStatus('🧪 Testing price scraping...', 'testing');
+            
+            try {
+                // Since we're in a browser environment, we'll use a CORS proxy
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+                
+                if (!data.contents) {
+                    throw new Error('Could not fetch page content');
+                }
+                
+                // Parse the HTML content
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+                
+                // Find the price element
+                const priceElement = doc.querySelector(selector);
+                
+                if (!priceElement) {
+                    throw new Error(`Price element not found with selector: ${selector}`);
+                }
+                
+                // Extract price
+                let priceText;
+                if (attribute) {
+                    priceText = priceElement.getAttribute(attribute);
+                } else {
+                    priceText = priceElement.textContent || priceElement.innerText;
+                }
+                
+                if (!priceText) {
+                    throw new Error('Price text not found in element');
+                }
+                
+                // Extract numeric price
+                const priceMatch = priceText.match(/[\d,]+\.?\d*/);
+                if (!priceMatch) {
+                    throw new Error(`Could not extract price from: "${priceText}"`);
+                }
+                
+                const price = parseFloat(priceMatch[0].replace(/,/g, ''));
+                
+                showScrapeStatus(`✅ Success! Found price: ${price.toFixed(2)}`, 'success');
+                
+                // Update the price input with the scraped price
+                const priceInput = document.querySelector(`[data-material="${currentScrapeMaterial}"]`);
+                if (priceInput) {
+                    priceInput.value = price.toFixed(2);
+                }
+                
+            } catch (error) {
+                console.error('Scraping test error:', error);
+                showScrapeStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function saveScrapeConfig() {
+            const url = document.getElementById('scrape-url').value.trim();
+            const selector = document.getElementById('scrape-selector').value.trim();
+            const attribute = document.getElementById('scrape-attribute').value.trim();
+            const frequency = document.getElementById('scrape-frequency').value;
+            
+            if (!url || !selector) {
+                showScrapeStatus('❌ Please enter both URL and CSS selector', 'error');
+                return;
+            }
+            
+            if (!currentScrapeMaterial) {
+                showScrapeStatus('❌ No material selected', 'error');
+                return;
+            }
+            
+            // Save configuration
+            const scrapeConfigs = JSON.parse(localStorage.getItem('asfScrapeConfigs') || '{}');
+            scrapeConfigs[currentScrapeMaterial] = {
+                url: url,
+                selector: selector,
+                attribute: attribute,
+                frequency: frequency,
+                lastUpdated: new Date().toISOString(),
+                enabled: true
+            };
+            
+            localStorage.setItem('asfScrapeConfigs', JSON.stringify(scrapeConfigs));
+            
+            showScrapeStatus('✅ Scraping configuration saved!', 'success');
+            
+            // Close modal after 2 seconds
+            setTimeout(() => {
+                closeScrapeModal();
+                showNotification(`🌐 Auto-scraping configured for ${currentScrapeMaterial.replace(/_/g, ' ')}`, 'success');
+            }, 2000);
+        }
+
+        function showScrapeStatus(message, type) {
+            const status = document.getElementById('scrape-status');
+            status.textContent = message;
+            status.className = `scrape-status ${type}`;
+            status.style.display = 'block';
+        }
+
+        // Auto-scraping function
+        async function runAutoScraping() {
+            const scrapeConfigs = JSON.parse(localStorage.getItem('asfScrapeConfigs') || '{}');
+            const now = new Date();
+            let updatedCount = 0;
+            
+            for (const [materialKey, config] of Object.entries(scrapeConfigs)) {
+                if (!config.enabled || config.frequency === 'manual') continue;
+                
+                const lastUpdate = new Date(config.lastUpdated);
+                const hoursSinceUpdate = (now - lastUpdate) / (1000 * 60 * 60);
+                
+                let shouldUpdate = false;
+                switch (config.frequency) {
+                    case 'hourly':
+                        shouldUpdate = hoursSinceUpdate >= 1;
+                        break;
+                    case 'daily':
+                        shouldUpdate = hoursSinceUpdate >= 24;
+                        break;
+                    case 'weekly':
+                        shouldUpdate = hoursSinceUpdate >= 168;
+                        break;
+                }
+                
+                if (shouldUpdate) {
+                    try {
+                        const price = await scrapePriceFromConfig(config);
+                        if (price) {
+                            updatePrice(materialKey, price);
+                            config.lastUpdated = now.toISOString();
+                            updatedCount++;
+                        }
+                    } catch (error) {
+                        console.error(`Auto-scraping failed for ${materialKey}:`, error);
+                    }
+                }
+            }
+            
+            if (updatedCount > 0) {
+                localStorage.setItem('asfScrapeConfigs', JSON.stringify(scrapeConfigs));
+                showNotification(`🌐 Auto-scraped ${updatedCount} price(s)`, 'success');
+            }
+        }
+
+        async function scrapePriceFromConfig(config) {
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(config.url)}`;
+            
+            const response = await fetch(proxyUrl);
+            const data = await response.json();
+            
+            if (!data.contents) {
+                throw new Error('Could not fetch page content');
+            }
+            
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data.contents, 'text/html');
+            const priceElement = doc.querySelector(config.selector);
+            
+            if (!priceElement) {
+                throw new Error(`Price element not found`);
+            }
+            
+            let priceText;
+            if (config.attribute) {
+                priceText = priceElement.getAttribute(config.attribute);
+            } else {
+                priceText = priceElement.textContent || priceElement.innerText;
+            }
+            
+            const priceMatch = priceText.match(/[\d,]+\.?\d*/);
+            if (!priceMatch) {
+                throw new Error(`Could not extract price from text`);
+            }
+            
+            return parseFloat(priceMatch[0].replace(/,/g, ''));
+        }
+
+        // Run auto-scraping every hour
+        setInterval(runAutoScraping, 60 * 60 * 1000);
+
+        // Also run on page load
+        setTimeout(runAutoScraping, 5000);
         function showSection(sectionId) {
             // Hide all sections
             document.querySelectorAll('.section').forEach(section => {
