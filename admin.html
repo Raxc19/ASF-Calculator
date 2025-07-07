@@ -1149,6 +1149,16 @@
             
             const parser = new DOMParser();
             const doc = parser.parseFromString(data.contents, 'text/html');
+            
+            // Special handling for Home Depot
+            if (config.url.includes('homedepot.com')) {
+                const price = extractHomeDepotPrice(doc);
+                if (price) {
+                    return price;
+                }
+            }
+            
+            // Standard extraction
             const priceElement = doc.querySelector(config.selector);
             
             if (!priceElement) {
