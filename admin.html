@@ -1178,26 +1178,30 @@
                 }
             }
             
-            // Standard extraction
-            const priceElement = doc.querySelector(config.selector);
-            
-            if (!priceElement) {
-                throw new Error(`Price element not found`);
+            // Standard extraction - only if selector is provided and not auto-detect
+            if (config.selector && config.selector !== 'auto-detect') {
+                const priceElement = doc.querySelector(config.selector);
+                
+                if (!priceElement) {
+                    throw new Error(`Price element not found`);
+                }
+                
+                let priceText;
+                if (config.attribute) {
+                    priceText = priceElement.getAttribute(config.attribute);
+                } else {
+                    priceText = priceElement.textContent || priceElement.innerText;
+                }
+                
+                const priceMatch = priceText.match(/[\d,]+\.?\d*/);
+                if (!priceMatch) {
+                    throw new Error(`Could not extract price from text`);
+                }
+                
+                return parseFloat(priceMatch[0].replace(/,/g, ''));
             }
             
-            let priceText;
-            if (config.attribute) {
-                priceText = priceElement.getAttribute(config.attribute);
-            } else {
-                priceText = priceElement.textContent || priceElement.innerText;
-            }
-            
-            const priceMatch = priceText.match(/[\d,]+\.?\d*/);
-            if (!priceMatch) {
-                throw new Error(`Could not extract price from text`);
-            }
-            
-            return parseFloat(priceMatch[0].replace(/,/g, ''));
+            throw new Error('No valid extraction method found');
         }
 
         // Run auto-scraping every hour
