@@ -5,276 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASF Construction Cost Calculator</title>
     <style>
-        /* Admin Modal Styles */
-        #admin-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10000;
-        }
-
-        .admin-modal-overlay {
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .admin-modal-content {
-            background: #ffffff;
-            border-radius: 20px;
-            border: 3px solid #ffd700;
-            max-width: 900px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .admin-header {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000000;
-            padding: 20px;
-            border-radius: 17px 17px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .admin-header h2 {
-            margin: 0;
-            font-size: 1.5em;
-        }
-
-        .close-admin {
-            background: none;
-            border: none;
-            font-size: 2em;
-            cursor: pointer;
-            color: #000000;
-            font-weight: bold;
-        }
-
-        .admin-body {
-            padding: 30px;
-        }
-
-        .category-section {
-            margin-bottom: 30px;
-            border: 2px solid #ffd700;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .category-section h3 {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000000;
-            margin: 0;
-            padding: 15px 20px;
-            font-size: 1.2em;
-        }
-
-        .price-items {
-            padding: 20px;
-        }
-
-        .price-item {
-            display: grid;
-            grid-template-columns: 2fr 1fr auto;
-            gap: 15px;
-            align-items: center;
-            padding: 15px;
-            margin-bottom: 10px;
-            background: rgba(255, 215, 0, 0.1);
-            border-radius: 10px;
-        }
-
-        .price-item label {
-            font-weight: bold;
-            color: #000000;
-        }
-
-        .price-item input {
-            padding: 10px;
-            border: 2px solid #ffd700;
-            border-radius: 8px;
-            font-size: 1em;
-            text-align: center;
-        }
-
-        .price-item button {
-            background: linear-gradient(45deg, #4caf50, #66bb6a);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .price-item button:hover {
-            background: linear-gradient(45deg, #66bb6a, #4caf50);
-        }
-
-        .admin-actions {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        .admin-actions button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1em;
-        }
-
-        .admin-actions button:nth-child(1) {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000000;
-        }
-
-        .admin-actions button:nth-child(2) {
-            background: linear-gradient(45deg, #f44336, #e57373);
-            color: white;
-        }
-
-        .admin-actions button:nth-child(3) {
-            background: linear-gradient(45deg, #2196f3, #64b5f6);
-            color: white;
-        }
-
-        /* Dark mode support for admin panel */
-        body.dark-mode .admin-modal-content {
-            background: #2c2c2c;
-            color: #ffffff;
-        }
-
-        body.dark-mode .price-item {
-            background: rgba(255, 215, 0, 0.2);
-        }
-
-        body.dark-mode .price-item label {
-            color: #ffffff;
-        }
-
-        body.dark-mode .price-item input {
-            background: #1a1a1a;
-            color: #ffffff;
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        
-        /* Contact Footer Section */
-        .contact-footer {
-            background: #2c2c2c;
-            padding: 40px 0;
-            margin-top: 60px;
-        }
-        
-        .contact-footer-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            align-items: center;
-        }
-        
-        .contact-item {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .contact-icon-box {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #ffd700, #ffed4e);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .contact-icon-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .contact-icon-box:hover::before {
-            left: 100%;
-        }
-        
-        .contact-icon {
-            font-size: 24px;
-            color: #000000;
-            font-weight: bold;
-            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.1));
-        }
-        
-        .contact-details {
-            flex: 1;
-        }
-        
-        .contact-label {
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            opacity: 0.9;
-        }
-        
-        .contact-value {
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 500;
-            line-height: 1.4;
-        }
-        
-        .contact-value:hover {
-            color: #ffd700;
-            transition: color 0.3s ease;
-        }
-        
-        @media (max-width: 768px) {
-            .contact-footer-content {
-                grid-template-columns: 1fr;
-                gap: 30px;
-                text-align: left;
-            }
-            
-            .contact-item {
-                justify-content: flex-start;
-            }
-            
-            .contact-value {
-                font-size: 16px;
-            }
         }
         
         body {
@@ -291,7 +25,153 @@
             box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
         }
         
-        /* Contact Bar Styles */
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 60px;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: -15px;
+        }
+        
+        .logo-link {
+            display: inline-block;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-link:hover {
+            transform: scale(1.02);
+        }
+        
+        .logo-image {
+            height: 160px;
+            width: auto;
+            max-width: 500px;
+            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+            transition: all 0.3s ease;
+            background: transparent;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+        }
+        
+        .logo-image:hover {
+            filter: drop-shadow(3px 3px 8px rgba(0, 0, 0, 0.3));
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .dark-mode-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 25px;
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            user-select: none;
+        }
+        
+        .dark-mode-toggle:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+        
+        .toggle-icon {
+            font-size: 16px;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .toggle-icon.rotating {
+            transform: rotate(360deg) scale(1.2);
+        }
+        
+        .toggle-text {
+            color: #000000;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        /* Dark Mode Styles with Smooth Dissolve Transitions */
+        body {
+            transition: background-color 1.5s ease-in-out, 
+                        color 1.5s ease-in-out;
+        }
+        
+        .header,
+        .contact-bar,
+        .calculator-form,
+        .live-preview,
+        .modal-content,
+        .summary-card,
+        .breakdown-section,
+        .materials-table,
+        .tier-card,
+        .checkbox-group,
+        .house-details,
+        .pricing-tiers,
+        .options-section {
+            transition: background-color 1.5s ease-in-out, 
+                        border-color 1.5s ease-in-out, 
+                        color 1.5s ease-in-out,
+                        box-shadow 1.5s ease-in-out;
+        }
+        
+        .form-section input,
+        .form-section select,
+        .detail-row select,
+        .detail-row input,
+        .detail-row label,
+        .form-section label,
+        .section-title,
+        .main-title h1,
+        .main-title p,
+        .preview-title,
+        .cost-item,
+        .cost-amount,
+        .contact-bar-label,
+        .contact-bar-value,
+        .tier-card h4,
+        .tier-card p,
+        .tier-specs div,
+        .checkbox-group label,
+        .toggle-text {
+            transition: background-color 1.5s ease-in-out, 
+                        border-color 1.5s ease-in-out, 
+                        color 1.5s ease-in-out;
+        }
+        
+        .header-badge {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            border: 2px solid #ffd700;
+        }
+        
+        /* Contact Bar */
         .contact-bar {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -356,7 +236,6 @@
             color: #ffd700;
         }
         
-        /* Hover Line Animation */
         .hover-line {
             position: absolute;
             top: 0;
@@ -372,7 +251,6 @@
             transform: translateX(0);
         }
         
-        /* Separator lines between items */
         .contact-bar-item:not(:last-child)::after {
             content: '';
             position: absolute;
@@ -381,487 +259,6 @@
             bottom: 20%;
             width: 1px;
             background: rgba(255, 215, 0, 0.3);
-        }
-        
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 60px;
-            position: relative;
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        /* Dark Mode Toggle */
-        .dark-mode-toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 215, 0, 0.1);
-            border: 2px solid #ffd700;
-            border-radius: 25px;
-            padding: 8px 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            font-weight: 500;
-            user-select: none;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .dark-mode-toggle::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .dark-mode-toggle:hover::before {
-            left: 100%;
-        }
-        
-        .dark-mode-toggle:hover {
-            background: rgba(255, 215, 0, 0.2);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-        }
-        
-        .toggle-icon {
-            font-size: 16px;
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            display: inline-block;
-        }
-        
-        .toggle-icon.rotating {
-            transform: rotate(360deg) scale(1.2);
-        }
-        
-        .dark-mode-toggle:hover .toggle-icon {
-            transform: rotate(15deg) scale(1.1);
-        }
-        
-        .toggle-text {
-            color: #000000;
-            font-weight: 600;
-            transition: color 0.3s ease;
-        }
-        
-        /* Dark Mode Transition Overlay - Real-time sliding effect */
-        .theme-transition-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background: linear-gradient(180deg, 
-                rgba(26, 26, 26, 0.9) 0%, 
-                rgba(44, 44, 44, 0.8) 50%, 
-                rgba(26, 26, 26, 0.9) 100%);
-            z-index: 1;
-            pointer-events: none;
-            transform: translateY(-100%);
-            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0;
-        }
-        
-        .theme-transition-overlay.active {
-            transform: translateY(0);
-            opacity: 1;
-            animation: slideAndFade 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        
-        .theme-transition-overlay.reverse {
-            background: linear-gradient(180deg, 
-                rgba(255, 255, 255, 0.9) 0%, 
-                rgba(245, 245, 245, 0.8) 50%, 
-                rgba(255, 255, 255, 0.9) 100%);
-        }
-        
-        @keyframes slideAndFade {
-            0% {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            50% {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-        }
-        
-        /* Dark Mode Styles with Smooth Dissolve Transitions */
-        body {
-            transition: background-color 1.5s ease-in-out, 
-                        color 1.5s ease-in-out;
-        }
-        
-        .header,
-        .contact-bar,
-        .calculator-form,
-        .live-preview,
-        .modal-content,
-        .summary-card,
-        .breakdown-section,
-        .materials-table,
-        .admin-content,
-        .tier-card,
-        .checkbox-group,
-        .house-details,
-        .pricing-tiers,
-        .options-section {
-            transition: background-color 1.5s ease-in-out, 
-                        border-color 1.5s ease-in-out, 
-                        color 1.5s ease-in-out,
-                        box-shadow 1.5s ease-in-out;
-        }
-        
-        .form-section input,
-        .form-section select,
-        .detail-row select,
-        .detail-row input,
-        .detail-row label,
-        .price-item input,
-        .form-section label,
-        .section-title,
-        .main-title h1,
-        .main-title p,
-        .preview-title,
-        .cost-item,
-        .cost-amount,
-        .contact-bar-label,
-        .contact-bar-value,
-        .tier-card h4,
-        .tier-card p,
-        .tier-specs div,
-        .checkbox-group label,
-        .toggle-text {
-            transition: background-color 1.5s ease-in-out, 
-                        border-color 1.5s ease-in-out, 
-                        color 1.5s ease-in-out;
-        }
-        
-        /* Remove any overlay effects */
-        .theme-transition-overlay {
-            display: none;
-        }
-        
-        /* Dark Mode Styles */
-        body.dark-mode {
-            background: #1a1a1a;
-            color: #ffffff;
-        }
-        
-        body.dark-mode .header {
-            background: #2c2c2c;
-            border-bottom-color: #ffd700;
-        }
-        
-        body.dark-mode .contact-bar {
-            background: #2c2c2c;
-        }
-        
-        body.dark-mode .contact-bar-item:hover {
-            background: rgba(255, 215, 0, 0.15);
-        }
-        
-        body.dark-mode .contact-bar-label {
-            color: #aaaaaa;
-        }
-        
-        body.dark-mode .contact-bar-value {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .main-title h1,
-        body.dark-mode .main-title p,
-        body.dark-mode .section-title,
-        body.dark-mode .form-section label {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .calculator-form {
-            background: #2c2c2c;
-            border-color: #ffd700;
-            color: #ffffff;
-        }
-        
-        body.dark-mode .form-section input,
-        body.dark-mode .form-section select {
-            background: #1a1a1a;
-            border-color: #ffd700;
-            color: #ffffff;
-        }
-        
-        /* Dark mode dropdown arrow styling */
-        body.dark-mode .form-section select,
-        body.dark-mode .detail-row select {
-            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ffffff'%3E%3Cpath d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px center;
-            background-size: 12px;
-            padding-right: 40px;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-        
-        body.dark-mode .form-section input:focus,
-        body.dark-mode .form-section select:focus {
-            background: #333333;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-        }
-        
-        body.dark-mode .house-details,
-        body.dark-mode .pricing-tiers,
-        body.dark-mode .options-section {
-            background: rgba(255, 215, 0, 0.05);
-            border-color: #ffd700;
-        }
-        
-        body.dark-mode .detail-row label {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .detail-row select,
-        body.dark-mode .detail-row input {
-            background: #1a1a1a;
-            border-color: #ffd700;
-            color: #ffffff;
-        }
-        
-        body.dark-mode .tier-card {
-            background: #3a3a3a;
-            border-color: #ffd700;
-            color: #ffffff;
-        }
-        
-        body.dark-mode .tier-card h4 {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .tier-card p {
-            color: #cccccc;
-        }
-        
-        body.dark-mode .tier-specs div {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .tier-card:hover {
-            background: rgba(255, 215, 0, 0.1);
-        }
-        
-        body.dark-mode .tier-card.selected {
-            background: rgba(255, 215, 0, 0.2);
-        }
-        
-        body.dark-mode .checkbox-group {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        body.dark-mode .checkbox-group label {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .checkbox-group:hover {
-            background: rgba(255, 215, 0, 0.15);
-        }
-        
-        body.dark-mode .live-preview {
-            background: #2c2c2c;
-            border-color: #ffd700;
-            color: #ffffff;
-        }
-        
-        body.dark-mode .preview-title {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .cost-item {
-            border-bottom-color: rgba(255, 215, 0, 0.3);
-            color: #ffffff;
-        }
-        
-        body.dark-mode .cost-amount {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .modal-content {
-            background: #2c2c2c;
-            border-color: #ffd700;
-            color: #ffffff;
-        }
-        
-        body.dark-mode .modal-header h2 {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .summary-card {
-            background: #3a3a3a;
-            border-color: #ffd700;
-            color: #ffffff;
-        }
-        
-        body.dark-mode .summary-card h4 {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .breakdown-section {
-            background: rgba(255, 215, 0, 0.05);
-            border-color: #ffd700;
-        }
-        
-        body.dark-mode .breakdown-title {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .materials-table {
-            background: #3a3a3a;
-            border-color: #ffd700;
-        }
-        
-        body.dark-mode .materials-table th {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000000;
-        }
-        
-        body.dark-mode .materials-table td {
-            color: #ffffff;
-            border-bottom-color: rgba(255, 215, 0, 0.2);
-        }
-        
-        body.dark-mode .materials-table tr:hover {
-            background: rgba(255, 215, 0, 0.1);
-        }
-        
-        body.dark-mode .admin-content {
-            background: #2c2c2c;
-            border-color: #ffd700;
-            color: #ffffff;
-        }
-        
-        body.dark-mode .admin-header h2 {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .category-section h3 {
-            color: #000000; /* Keep black text on yellow background */
-        }
-        
-        body.dark-mode .price-item {
-            background: rgba(255, 215, 0, 0.05);
-            border-color: #ffd700;
-        }
-        
-        body.dark-mode .price-item label {
-            color: #ffffff;
-        }
-        
-        body.dark-mode .price-item input {
-            background: #1a1a1a;
-            border-color: #ffd700;
-            color: #ffffff;
-        }
-        
-        body.dark-mode .toggle-text {
-            color: #ffffff;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-left: -15px;
-        }
-        
-        /* Logo Link Styling */
-        .logo-link {
-            display: inline-block;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .logo-link:hover {
-            transform: scale(1.02);
-        }
-        
-        /* Logo Image Styling */
-        .logo-image {
-            height: 160px;
-            width: auto;
-            max-width: 500px;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
-            transition: all 0.3s ease;
-            background: transparent;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-        }
-        
-        .logo-image:hover {
-            filter: drop-shadow(3px 3px 8px rgba(0, 0, 0, 0.3));
-        }
-        
-        /* Text Logo Styling (fallback/alternative) */
-        .logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .logo-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: #000000;
-            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
-        }
-        
-        .company-title {
-            color: #ffd700;
-            font-size: 3em;
-            font-weight: bold;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
-        }
-        
-        .company-tagline {
-            color: #333333;
-            font-size: 1em;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-        
-        .header-badge {
-            background: linear-gradient(45deg, #ffd700, #ffed4e);
-            color: #000000;
-            padding: 12px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 1.1em;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-            border: 2px solid #ffd700;
         }
         
         .container {
@@ -984,7 +381,7 @@
             padding: 20px;
             border-radius: 15px;
             border: 2px solid #ffd700;
-            transition: all 0.3s ease;
+            transition: all 1.5s ease-in-out;
             cursor: pointer;
             position: relative;
             user-select: none;
@@ -1048,29 +445,10 @@
             overflow: hidden;
         }
         
-        .checkbox-group::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-        
         .checkbox-group:hover {
             background: rgba(255, 215, 0, 0.2);
             transform: translateX(5px);
             box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
-        }
-        
-        .checkbox-group:hover::before {
-            left: 100%;
-        }
-        
-        .checkbox-group:active {
-            transform: scale(0.98) translateX(3px);
         }
         
         .checkbox-group input[type="checkbox"] {
@@ -1157,7 +535,6 @@
             transition: all 0.4s ease;
         }
         
-        /* Enhanced blur effects for smooth transitions */
         .cost-amount.updating {
             filter: blur(4px);
             opacity: 0.5;
@@ -1172,7 +549,6 @@
             animation: highlightUpdate 0.8s ease;
         }
         
-        /* Smooth blur transition for the entire preview panel */
         .live-preview.calculating {
             filter: blur(2px);
             opacity: 0.8;
@@ -1220,27 +596,6 @@
             }
         }
         
-        /* Shimmer effect for updating costs */
-        @keyframes shimmer {
-            0% {
-                background-position: -200px 0;
-            }
-            100% {
-                background-position: calc(200px + 100%) 0;
-            }
-        }
-        
-        .cost-amount.shimmer {
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 215, 0, 0.3),
-                transparent
-            );
-            background-size: 200px 100%;
-            animation: shimmer 1s ease-in-out;
-        }
-        
         .details-btn {
             background: linear-gradient(45deg, #ffd700, #ffed4e);
             color: #000000;
@@ -1261,7 +616,6 @@
             box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
         }
         
-        /* PNG Download Button - Same Yellow Style */
         .png-download-btn {
             background: linear-gradient(45deg, #ffd700, #ffed4e);
             color: #000000;
@@ -1415,6 +769,262 @@
             border-radius: 10px;
         }
         
+        /* Contact Footer */
+        .contact-footer {
+            background: #2c2c2c;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .contact-footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .contact-icon-box {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+        
+        .contact-icon {
+            font-size: 24px;
+            color: #000000;
+            font-weight: bold;
+        }
+        
+        .contact-details {
+            flex: 1;
+        }
+        
+        .contact-label {
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+        
+        .contact-value {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+        
+        .contact-value:hover {
+            color: #ffd700;
+            transition: color 0.3s ease;
+        }
+        
+        /* Dark Mode Styles */
+        body {
+            transition: background-color 1.5s ease-in-out, color 1.5s ease-in-out;
+        }
+        
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .header {
+            background: #2c2c2c;
+            border-bottom-color: #ffd700;
+        }
+        
+        body.dark-mode .contact-bar {
+            background: #2c2c2c;
+        }
+        
+        body.dark-mode .contact-bar-item:hover {
+            background: rgba(255, 215, 0, 0.15);
+        }
+        
+        body.dark-mode .contact-bar-label {
+            color: #aaaaaa;
+        }
+        
+        body.dark-mode .contact-bar-value {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .main-title h1,
+        body.dark-mode .main-title p,
+        body.dark-mode .section-title,
+        body.dark-mode .form-section label {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .calculator-form {
+            background: #2c2c2c;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .form-section input,
+        body.dark-mode .form-section select {
+            background: #1a1a1a;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .house-details,
+        body.dark-mode .pricing-tiers,
+        body.dark-mode .options-section {
+            background: rgba(255, 215, 0, 0.05);
+            border-color: #ffd700;
+        }
+        
+        body.dark-mode .detail-row label {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .detail-row select,
+        body.dark-mode .detail-row input {
+            background: #1a1a1a;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .tier-card {
+            background: #3a3a3a;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .tier-card h4 {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .tier-card p {
+            color: #cccccc;
+        }
+        
+        body.dark-mode .tier-specs div {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .tier-card:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        body.dark-mode .tier-card.selected {
+            background: rgba(255, 215, 0, 0.2);
+        }
+        
+        body.dark-mode .checkbox-group {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        body.dark-mode .checkbox-group label {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .checkbox-group:hover {
+            background: rgba(255, 215, 0, 0.15);
+        }
+        
+        body.dark-mode .live-preview {
+            background: #2c2c2c;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .preview-title {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .cost-item {
+            border-bottom-color: rgba(255, 215, 0, 0.3);
+            color: #ffffff;
+        }
+        
+        body.dark-mode .cost-amount {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .modal-content {
+            background: #2c2c2c;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .modal-header h2 {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .summary-card {
+            background: #3a3a3a;
+            border-color: #ffd700;
+            color: #ffffff;
+        }
+        
+        body.dark-mode .summary-card h4 {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .breakdown-section {
+            background: rgba(255, 215, 0, 0.05);
+            border-color: #ffd700;
+        }
+        
+        body.dark-mode .breakdown-title {
+            color: #ffffff;
+        }
+        
+        body.dark-mode .materials-table {
+            background: #3a3a3a;
+            border-color: #ffd700;
+        }
+        
+        body.dark-mode .materials-table th {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+        }
+        
+        body.dark-mode .materials-table td {
+            color: #ffffff;
+            border-bottom-color: rgba(255, 215, 0, 0.2);
+        }
+        
+        body.dark-mode .materials-table tr:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        body.dark-mode .toggle-text {
+            color: #ffffff;
+        }
+        
+        /* Hidden Admin Access */
+        .admin-access {
+            position: absolute;
+            bottom: 5px;
+            right: 20px;
+            opacity: 0.1;
+            font-size: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        /* Mobile Responsive */
         @media (max-width: 1200px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -1429,36 +1039,31 @@
         
         @media (max-width: 768px) {
             .header {
-                padding: 3px 0 0 0; /* Much tighter on mobile */
+                padding: 3px 0 0 0;
             }
             
             .header-content {
                 flex-direction: column;
                 text-align: center;
-                gap: 5px; /* Minimal gap */
+                gap: 5px;
                 padding: 0 15px;
-                min-height: auto; /* Remove min-height constraint */
+                min-height: auto;
             }
             
             .header-badge {
-                display: none; /* Hide badge completely on mobile */
+                display: none;
             }
             
             .header-right {
-                display: none; /* Hide entire right section on mobile */
-            }
-            
-            .company-title {
-                font-size: 2.2em;
+                display: none;
             }
             
             .logo-image {
-                height: 200px; /* Even bigger logo on mobile */
+                height: 200px;
                 max-width: 500px;
-                margin-bottom: -5px; /* Pull closer to yellow line */
+                margin-bottom: -5px;
             }
             
-            /* Hide Contact Bar Completely on Mobile */
             .contact-bar {
                 display: none;
             }
@@ -1479,7 +1084,7 @@
             
             .form-section input, .form-section select {
                 padding: 20px 15px;
-                font-size: 16px; /* Prevents zoom on iOS */
+                font-size: 16px;
                 border-radius: 8px;
             }
             
@@ -1504,7 +1109,7 @@
             .detail-row select, .detail-row input {
                 padding: 15px 12px;
                 font-size: 16px;
-                min-height: 48px; /* Touch-friendly */
+                min-height: 48px;
             }
             
             .pricing-tiers {
@@ -1535,7 +1140,7 @@
                 padding: 20px 15px;
                 margin-bottom: 15px;
                 border-radius: 10px;
-                min-height: 60px; /* Better touch target */
+                min-height: 60px;
             }
             
             .checkbox-group input[type="checkbox"] {
@@ -1650,164 +1255,6 @@
             .contact-value {
                 font-size: 16px;
             }
-            
-            .admin-content {
-                padding: 20px 15px;
-                margin: 10px;
-            }
-            
-            .price-item {
-                grid-template-columns: 1fr;
-                gap: 10px;
-                padding: 15px;
-                text-align: center;
-            }
-            
-            .price-item input {
-                max-width: 150px;
-                margin: 0 auto;
-            }
-            
-            .admin-actions {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .admin-actions button {
-                width: 100%;
-                padding: 15px;
-            }
-        }
-        
-        /* Tablet-specific optimizations */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            
-            .calculator-form {
-                padding: 40px 35px;
-            }
-            
-            .live-preview {
-                position: relative;
-                top: 0;
-                max-width: 600px;
-                margin: 0 auto;
-            }
-            
-            .tier-cards {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-        }
-        
-        /* Extra small mobile devices */
-        @media (max-width: 480px) {
-            .header {
-                padding: 2px 0 0 0; /* Almost no padding on small mobile */
-            }
-            
-            .container {
-                padding: 10px 10px 30px 10px;
-            }
-            
-            .main-title h1 {
-                font-size: 1.8em;
-            }
-            
-            .main-title p {
-                font-size: 1em;
-            }
-            
-            .calculator-form {
-                padding: 20px 15px;
-                margin: 0 5px;
-            }
-            
-            .form-section label {
-                font-size: 1.1em;
-            }
-            
-            .form-section input, .form-section select {
-                padding: 18px 12px;
-                font-size: 16px;
-            }
-            
-            .logo-image {
-                height: 160px; /* Large logo even on small screens */
-                max-width: 400px;
-                margin-bottom: 8px; /* Small gap before contact bar */
-            }
-            
-            .contact-bar {
-                padding: 8px 0;
-            }
-            
-            .contact-bar-item {
-                padding: 10px 15px;
-                gap: 12px;
-            }
-            
-            .contact-bar-value {
-                font-size: 12px;
-            }
-            
-            .tier-card {
-                padding: 15px 12px;
-            }
-            
-            .checkbox-group {
-                padding: 18px 12px;
-                min-height: 55px;
-            }
-            
-            .cost-item {
-                font-size: 0.95em;
-                padding: 15px 0;
-            }
-            
-            .cost-item:last-child {
-                font-size: 1.1em;
-                padding: 18px 12px;
-            }
-        }
-        
-        /* Touch-friendly improvements */
-        @media (hover: none) and (pointer: coarse) {
-            .tier-card, .checkbox-group, .details-btn, .calculate-btn {
-                transition: all 0.2s ease;
-            }
-            
-            .tier-card:active {
-                transform: scale(0.98);
-                background: rgba(255, 215, 0, 0.25);
-            }
-            
-            .checkbox-group:active {
-                transform: scale(0.98);
-                background: rgba(255, 215, 0, 0.3);
-            }
-            
-            .calculate-btn:active, .details-btn:active {
-                transform: scale(0.98) translateY(2px);
-            }
-            
-            /* Larger touch targets */
-            input[type="checkbox"] {
-                min-width: 24px;
-                min-height: 24px;
-            }
-            
-            select, input {
-                min-height: 48px;
-            }
-            
-            button {
-                min-height: 48px;
-                padding: 12px 20px;
-            }
         }
     </style>
 </head>
@@ -1815,14 +1262,12 @@
     <div class="header">
         <div class="header-content">
             <div class="logo">
-                <!-- Clickable ASF Design Logo -->
                 <a href="https://aswframing.com/" target="_blank" rel="noopener noreferrer" class="logo-link">
                     <img src="logo.png" alt="ASF Design Logo" class="logo-image">
                 </a>
             </div>
             
             <div class="header-right">
-                <!-- Dark Mode Toggle -->
                 <div class="dark-mode-toggle" onclick="toggleDarkMode()">
                     <div class="toggle-icon" id="theme-icon">🌙</div>
                     <span class="toggle-text" id="theme-text">Dark Mode</span>
@@ -1835,7 +1280,7 @@
             </div>
             
             <!-- Hidden Admin Link -->
-            <div class="admin-access" id="admin-trigger" style="position: absolute; bottom: 5px; right: 20px; opacity: 0.1; font-size: 8px; cursor: pointer; user-select: none;">
+            <div class="admin-access" id="admin-trigger">
                 ⚙️
             </div>
         </div>
@@ -2109,111 +1554,6 @@
         </div>
     </div>
     
-    <!-- Admin Price Update Panel (Hidden by default) -->
-    <div class="admin-panel" id="admin-panel" style="display: none;">
-        <div class="admin-content">
-            <div class="admin-header">
-                <h2>🔧 ASF Admin - Price Updates</h2>
-                <button class="close-admin" onclick="closeAdminPanel()">×</button>
-            </div>
-            
-            <div class="admin-warning">
-                <p><strong>⚠️ Admin Access:</strong> Update material prices here. Changes affect all calculator estimates.</p>
-            </div>
-            
-            <div class="price-categories">
-                <div class="category-section">
-                    <h3>🏗️ Foundation & Framing</h3>
-                    <div class="price-updates">
-                        <div class="price-item">
-                            <label>90lb Concrete Mix (per bag):</label>
-                            <input type="number" step="0.01" value="6.72" data-material="concrete">
-                            <button onclick="updatePrice('concrete', this.previousElementSibling.value)">Update</button>
-                        </div>
-                        <div class="price-item">
-                            <label>2x4x8 Premium Fir (per piece):</label>
-                            <input type="number" step="0.01" value="3.74" data-material="lumber_2x4">
-                            <button onclick="updatePrice('lumber_2x4', this.previousElementSibling.value)">Update</button>
-                        </div>
-                        <div class="price-item">
-                            <label>2x6x8 Douglas Fir (per piece):</label>
-                            <input type="number" step="0.01" value="7.98" data-material="lumber_2x6">
-                            <button onclick="updatePrice('lumber_2x6', this.previousElementSibling.value)">Update</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="category-section">
-                    <h3>🔩 Fasteners & Hardware</h3>
-                    <div class="price-updates">
-                        <div class="price-item">
-                            <label>3-1/2" Framing Nails 50lb (per box):</label>
-                            <input type="number" step="0.01" value="89.97" data-material="framing_nails">
-                            <button onclick="updatePrice('framing_nails', this.previousElementSibling.value)">Update</button>
-                        </div>
-                        <div class="price-item">
-                            <label>Roofing Nails 30lb (per box):</label>
-                            <input type="number" step="0.01" value="67.48" data-material="roofing_nails">
-                            <button onclick="updatePrice('roofing_nails', this.previousElementSibling.value)">Update</button>
-                        </div>
-                        <div class="price-item">
-                            <label>Drywall Screws 5lb (per box):</label>
-                            <input type="number" step="0.01" value="18.97" data-material="drywall_screws">
-                            <button onclick="updatePrice('drywall_screws', this.previousElementSibling.value)">Update</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="category-section">
-                    <h3>🏠 Building Materials</h3>
-                    <div class="price-updates">
-                        <div class="price-item">
-                            <label>GAF Roof Shingles (per bundle):</label>
-                            <input type="number" step="0.01" value="47.12" data-material="shingles">
-                            <button onclick="updatePrice('shingles', this.previousElementSibling.value)">Update</button>
-                        </div>
-                        <div class="price-item">
-                            <label>1/2" Drywall 4x8 (per sheet):</label>
-                            <input type="number" step="0.01" value="23.98" data-material="drywall">
-                            <button onclick="updatePrice('drywall', this.previousElementSibling.value)">Update</button>
-                        </div>
-                        <div class="price-item">
-                            <label>Laminate Flooring (per sq ft):</label>
-                            <input type="number" step="0.01" value="2.48" data-material="flooring">
-                            <button onclick="updatePrice('flooring', this.previousElementSibling.value)">Update</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="category-section">
-                    <h3>⚡ Electrical & Plumbing</h3>
-                    <div class="price-updates">
-                        <div class="price-item">
-                            <label>12 AWG Romex 250ft (per roll):</label>
-                            <input type="number" step="0.01" value="146.00" data-material="electrical">
-                            <button onclick="updatePrice('electrical', this.previousElementSibling.value)">Update</button>
-                        </div>
-                        <div class="price-item">
-                            <label>R-15 Insulation (per sq ft):</label>
-                            <input type="number" step="0.01" value="1.12" data-material="insulation">
-                            <button onclick="updatePrice('insulation', this.previousElementSibling.value)">Update</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="admin-actions">
-                <button class="save-all-btn" onclick="saveAllPrices()">💾 Save All Changes</button>
-                <button class="reset-btn" onclick="resetToDefaults()">🔄 Reset to Defaults</button>
-                <button class="export-btn" onclick="exportPrices()">📤 Export Price List</button>
-            </div>
-            
-            <div class="last-updated">
-                <p>Last updated: <span id="last-update-time">Never</span></p>
-            </div>
-        </div>
-    </div>
-    
     <!-- Hidden Canvas for PNG Generation -->
     <canvas id="estimate-canvas" style="display: none;"></canvas>
     
@@ -2303,552 +1643,7 @@
     </div>
 
     <script>
-    // Admin Panel Functions for GitHub Pages
-    function showSection(sectionId) {
-        // Hide all sections
-        document.querySelectorAll('.section').forEach(section => {
-            section.classList.remove('active');
-        });
-        
-        // Remove active from nav items
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        
-        // Show selected section
-        document.getElementById(sectionId).classList.add('active');
-        
-        // Add active to clicked nav item
-        event.target.classList.add('active');
-    }
-
-    function openMainSite() {
-        // Open your main calculator (update this URL to your GitHub Pages URL)
-        window.open('https://yourusername.github.io/repository-name/', '_blank');
-    }
-
-    function updatePrice(materialKey, newPrice) {
-        const price = parseFloat(newPrice);
-        if (isNaN(price) || price < 0) {
-            alert('❌ Please enter a valid price');
-            return;
-        }
-        
-        // Save to localStorage (will sync with main calculator)
-        const savedPrices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
-        savedPrices[materialKey] = price;
-        localStorage.setItem('asfAdminPrices', JSON.stringify(savedPrices));
-        
-        // Update last modified time
-        document.getElementById('last-update-display').textContent = new Date().toLocaleString();
-        
-        alert(`✅ ${materialKey} updated to $${price.toFixed(2)}\n\nPrice will sync with calculator automatically.`);
-    }
-
-    function saveAllPrices() {
-        const priceInputs = document.querySelectorAll('.price-input');
-        const prices = {};
-        let updateCount = 0;
-        
-        priceInputs.forEach(input => {
-            const materialKey = input.dataset.material;
-            const price = parseFloat(input.value);
-            if (!isNaN(price) && price >= 0) {
-                prices[materialKey] = price;
-                updateCount++;
-            }
-        });
-        
-        localStorage.setItem('asfAdminPrices', JSON.stringify(prices));
-        document.getElementById('last-update-display').textContent = new Date().toLocaleString();
-        
-        alert(`💾 All prices saved successfully!\n${updateCount} materials updated.\n\nPrices will sync with calculator.`);
-    }
-
-    function resetToDefaults() {
-        if (confirm('🔄 Reset all prices to defaults?\n\nThis will restore original ASF pricing and cannot be undone.')) {
-            localStorage.removeItem('asfAdminPrices');
-            
-            // Reset input values to defaults
-            const defaults = {
-                'concrete': 6.72,
-                'lumber_2x4': 3.74,
-                'lumber_2x6': 7.98,
-                'floor_joists': 18.50,
-                'rebar': 10.94,
-                'framing_nails': 89.97,
-                'roofing_nails': 67.48,
-                'drywall_screws': 18.97,
-                'shingles': 47.12,
-                'roof_underlayment': 89.50,
-                'drywall': 23.98,
-                'joint_compound': 15.75,
-                'flooring': 2.48,
-                'flooring_underlayment': 0.75,
-                'electrical': 146.00,
-                'gfci_outlets': 18.50,
-                'copper_pipe': 28.75,
-                'pex_tubing': 89.00,
-                'insulation': 1.12,
-                'blown_insulation': 12.50
-            };
-            
-            // Update input fields
-            Object.entries(defaults).forEach(([key, value]) => {
-                const input = document.querySelector(`[data-material="${key}"]`);
-                if (input) {
-                    input.value = value.toFixed(2);
-                }
-            });
-            
-            document.getElementById('last-update-display').textContent = new Date().toLocaleString();
-            alert('✅ All prices reset to ASF defaults');
-        }
-    }
-
-    function exportPrices() {
-        const prices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
-        const timestamp = new Date().toISOString().slice(0, 10);
-        
-        let exportText = `ASF Design - Material Price Export\n`;
-        exportText += `Generated: ${new Date().toLocaleString()}\n`;
-        exportText += `Location: Las Vegas, Nevada\n`;
-        exportText += `=`.repeat(50) + '\n\n';
-        
-        exportText += `CURRENT MATERIAL PRICES:\n`;
-        exportText += `-`.repeat(30) + '\n';
-        
-        if (Object.keys(prices).length === 0) {
-            exportText += `No custom prices set - using ASF defaults\n`;
-        } else {
-            for (const [material, price] of Object.entries(prices)) {
-                const displayName = material.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                exportText += `${displayName}: $${parseFloat(price).toFixed(2)}\n`;
-            }
-        }
-        
-        exportText += `\n` + `=`.repeat(50) + '\n';
-        exportText += `ASF Design - American Southwest Framing\n`;
-        exportText += `Professional Construction Services\n`;
-        exportText += `Las Vegas, Nevada\n`;
-        
-        const blob = new Blob([exportText], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `ASF_Material_Prices_${timestamp}.txt`;
-        link.click();
-        
-        alert('📤 Material price list exported successfully!');
-    }
-
-    function syncToCalculator() {
-        alert('🔄 Prices automatically sync via localStorage.\n\nRefresh your calculator page to see updates!');
-    }
-
-    function createBackup() {
-        const timestamp = new Date().toISOString();
-        const prices = localStorage.getItem('asfAdminPrices') || '{}';
-        const backup = {
-            timestamp: timestamp,
-            prices: JSON.parse(prices),
-            version: '1.0'
-        };
-        
-        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `ASF_Backup_${timestamp.slice(0, 10)}.json`;
-        link.click();
-        
-        alert('💾 Backup created successfully!');
-    }
-
-    function autoSync() {
-        alert('🔄 Auto sync enabled!\n\nPrices are automatically synchronized via localStorage.');
-    }
-
-    function importPrices() {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.json';
-        
-        input.onchange = function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const backup = JSON.parse(e.target.result);
-                        if (backup.prices) {
-                            localStorage.setItem('asfAdminPrices', JSON.stringify(backup.prices));
-                            location.reload(); // Refresh to show imported prices
-                        } else {
-                            alert('❌ Invalid backup file format');
-                        }
-                    } catch (error) {
-                        alert('❌ Error reading backup file');
-                    }
-                };
-                reader.readAsText(file);
-            }
-        };
-        
-        input.click();
-    }
-
-    function restoreBackup(backupId) {
-        alert('📁 Backup restore feature coming soon!');
-    }
-
-    function saveSettings() {
-        alert('⚙️ Settings saved successfully!');
-    }
-
-    // Load saved prices on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        const savedPrices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
-        
-        // Load saved prices into inputs
-        Object.entries(savedPrices).forEach(([key, value]) => {
-            const input = document.querySelector(`[data-material="${key}"]`);
-            if (input) {
-                input.value = parseFloat(value).toFixed(2);
-            }
-        });
-        
-        // Update stats
-        document.getElementById('total-materials').textContent = document.querySelectorAll('.price-input').length;
-        document.getElementById('price-updates').textContent = Object.keys(savedPrices).length;
-        
-        console.log('🔧 ASF Admin Panel loaded with', Object.keys(savedPrices).length, 'custom prices');
-    });
-    </script>
-
-
-    <script>
-        // Enhanced Detailed PNG Download Function with ACTUAL ASF Logo Image
-        function downloadEstimateImage() {
-            if (calculator.data.sqft <= 0) {
-                alert('Please enter the square footage first!');
-                document.getElementById('sqft').focus();
-                return;
-            }
-            
-            try {
-                const canvas = document.getElementById('estimate-canvas');
-                const ctx = canvas.getContext('2d');
-                
-                // Set larger canvas size for detailed content
-                canvas.width = 900;
-                canvas.height = 1400;
-                
-                // Background gradient
-                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                gradient.addColorStop(0, '#ffffff');
-                gradient.addColorStop(1, '#f8f9fa');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // Load the actual ASF logo image
-                const logo = new Image();
-                logo.crossOrigin = 'anonymous';
-                
-                logo.onload = function() {
-                    console.log('✅ Logo loaded successfully!');
-                    
-                    // Clear the header area with white background
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, canvas.width, 160);
-                    
-                    // Calculate logo size and position for TOP MIDDLE placement
-                    const maxLogoWidth = 250;  // Larger logo
-                    const maxLogoHeight = 80;
-                    
-                    // Calculate actual size maintaining aspect ratio
-                    let logoWidth = maxLogoWidth;
-                    let logoHeight = (logo.naturalHeight / logo.naturalWidth) * logoWidth;
-                    
-                    // If height is too big, scale down
-                    if (logoHeight > maxLogoHeight) {
-                        logoHeight = maxLogoHeight;
-                        logoWidth = (logo.naturalWidth / logo.naturalHeight) * logoHeight;
-                    }
-                    
-                    // Position logo at TOP MIDDLE
-                    const logoX = (canvas.width - logoWidth) / 2;  // Center horizontally
-                    const logoY = 20;  // Top position
-                    
-                    // Draw the actual logo image
-                    ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
-                    
-                    // Add subtitle below logo
-                    ctx.fillStyle = '#333333';
-                    ctx.font = 'bold 22px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('Professional Construction Cost Estimate', canvas.width / 2, logoY + logoHeight + 30);
-                    
-                    // Add subtitle details
-                    ctx.font = '16px Arial';
-                    ctx.fillText('Las Vegas, Nevada • Licensed & Insured • Sales Tax: 8.375%', canvas.width / 2, logoY + logoHeight + 55);
-                    
-                    // Add decorative border line under header
-                    ctx.strokeStyle = '#E5A825';
-                    ctx.lineWidth = 4;
-                    ctx.beginPath();
-                    ctx.moveTo(0, 160);
-                    ctx.lineTo(canvas.width, 160);
-                    ctx.stroke();
-                    
-                    // Now draw all the estimate content
-                    drawAllEstimateContent();
-                };
-                
-                logo.onerror = function() {
-                    console.error('❌ Failed to load logo image: asf-logo.png');
-                    alert('⚠️ Logo image not found. Please ensure asf-logo.png is in the same folder as your HTML file.');
-                    
-                    // Still generate estimate with text fallback
-                    drawTextHeaderFallback();
-                    drawAllEstimateContent();
-                };
-                
-                // Load your actual logo file
-                logo.src = 'asf-logo.png';  // This should load your actual logo
-                
-                function drawTextHeaderFallback() {
-                    console.log('Using text fallback header');
-                    
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, canvas.width, 160);
-                    
-                    ctx.fillStyle = '#E5A825';
-                    ctx.font = 'bold 48px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('ASF DESIGN', canvas.width / 2, 60);
-                    
-                    ctx.fillStyle = '#333333';
-                    ctx.font = 'bold 22px Arial';
-                    ctx.fillText('Professional Construction Cost Estimate', canvas.width / 2, 100);
-                    
-                    ctx.font = '16px Arial';
-                    ctx.fillText('Las Vegas, Nevada • Licensed & Insured', canvas.width / 2, 125);
-                    
-                    ctx.strokeStyle = '#E5A825';
-                    ctx.lineWidth = 4;
-                    ctx.beginPath();
-                    ctx.moveTo(0, 160);
-                    ctx.lineTo(canvas.width, 160);
-                    ctx.stroke();
-                }
-                
-                function drawAllEstimateContent() {
-                    let yPos = 200;  // Start after the header
-                    
-                    // Project Information Section
-                    ctx.fillStyle = '#e8f4fd';
-                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 120);
-                    ctx.strokeStyle = '#E5A825';
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 120);
-                    
-                    ctx.fillStyle = '#000000';
-                    ctx.font = 'bold 24px Arial';
-                    ctx.textAlign = 'left';
-                    ctx.fillText(`📊 PROJECT DETAILS`, 60, yPos + 10);
-                    
-                    yPos += 40;
-                    ctx.font = '18px Arial';
-                    const currentDate = new Date().toLocaleDateString();
-                    const tierName = calculator.data.pricing_tier.charAt(0).toUpperCase() + calculator.data.pricing_tier.slice(1);
-                    
-                    ctx.fillText(`• Project Size: ${calculator.data.sqft.toLocaleString()} Square Feet`, 60, yPos);
-                    yPos += 25;
-                    ctx.fillText(`• Estimate Date: ${currentDate}`, 60, yPos);
-                    yPos += 25;
-                    ctx.fillText(`• Pricing Tier: ${tierName} Construction`, 60, yPos);
-                    
-                    // House Specifications Section
-                    yPos += 60;
-                    ctx.fillStyle = '#fff3cd';
-                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 160);
-                    ctx.strokeStyle = '#E5A825';
-                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 160);
-                    
-                    ctx.fillStyle = '#000000';
-                    ctx.font = 'bold 22px Arial';
-                    ctx.fillText(`🏡 HOUSE SPECIFICATIONS`, 60, yPos + 10);
-                    
-                    yPos += 40;
-                    ctx.font = '16px Arial';
-                    
-                    const leftCol = 60;
-                    const rightCol = 480;
-                    
-                    ctx.fillText(`• Windows: ${calculator.data.windows}`, leftCol, yPos);
-                    ctx.fillText(`• Garages: ${calculator.data.garages}`, rightCol, yPos);
-                    yPos += 25;
-                    
-                    ctx.fillText(`• Bedrooms: ${calculator.data.bedrooms}`, leftCol, yPos);
-                    ctx.fillText(`• Stories: ${calculator.data.stories}`, rightCol, yPos);
-                    yPos += 25;
-                    
-                    ctx.fillText(`• Bathrooms: ${calculator.data.bathrooms}`, leftCol, yPos);
-                    ctx.fillText(`• Kitchens: ${calculator.data.kitchens}`, rightCol, yPos);
-                    
-                    // Detailed Cost Breakdown Section
-                    yPos += 80;
-                    ctx.fillStyle = '#d4edda';
-                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 300);
-                    ctx.strokeStyle = '#E5A825';
-                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 300);
-                    
-                    ctx.fillStyle = '#000000';
-                    ctx.font = 'bold 22px Arial';
-                    ctx.fillText(`💰 DETAILED COST BREAKDOWN`, 60, yPos + 10);
-                    
-                    yPos += 50;
-                    ctx.font = '18px Arial';
-                    
-                    // Materials breakdown
-                    ctx.fillText(`🧱 Materials Cost (with 8.375% tax):`, 60, yPos);
-                    ctx.textAlign = 'right';
-                    ctx.fillText(`$${Math.round(calculator.costs.materials).toLocaleString()}`, canvas.width - 60, yPos);
-                    ctx.textAlign = 'left';
-                    yPos += 30;
-                    
-                    // Labor breakdown
-                    ctx.fillText(`👷 Labor Cost:`, 60, yPos);
-                    ctx.textAlign = 'right';
-                    if (calculator.data.include_labor) {
-                        ctx.fillText(`$${Math.round(calculator.costs.labor).toLocaleString()}`, canvas.width - 60, yPos);
-                    } else {
-                        ctx.fillText(`$0 (Not Included)`, canvas.width - 60, yPos);
-                    }
-                    ctx.textAlign = 'left';
-                    yPos += 30;
-                    
-                    // Other costs
-                    ctx.fillText(`📋 Permits & Other Costs:`, 60, yPos);
-                    ctx.textAlign = 'right';
-                    ctx.fillText(`$${Math.round(calculator.costs.other).toLocaleString()}`, canvas.width - 60, yPos);
-                    ctx.textAlign = 'left';
-                    yPos += 30;
-                    
-                    // Profit
-                    ctx.fillText(`💼 Contractor Profit:`, 60, yPos);
-                    ctx.textAlign = 'right';
-                    if (calculator.data.include_profit) {
-                        ctx.fillText(`$${Math.round(calculator.costs.profit).toLocaleString()}`, canvas.width - 60, yPos);
-                    } else {
-                        ctx.fillText(`$0 (Not Included)`, canvas.width - 60, yPos);
-                    }
-                    ctx.textAlign = 'left';
-                    yPos += 30;
-                    
-                    // Land cost if applicable
-                    if (calculator.data.land_cost_type !== 'none') {
-                        ctx.fillText(`🏞️ Land Cost:`, 60, yPos);
-                        ctx.textAlign = 'right';
-                        ctx.fillText(`$${Math.round(calculator.costs.land_cost).toLocaleString()}`, canvas.width - 60, yPos);
-                        ctx.textAlign = 'left';
-                        yPos += 30;
-                    }
-                    
-                    // Total Section - Make it prominent
-                    yPos += 50;
-                    ctx.fillStyle = '#E5A825';
-                    ctx.fillRect(40, yPos - 30, canvas.width - 80, 80);
-                    ctx.strokeStyle = '#000000';
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(40, yPos - 30, canvas.width - 80, 80);
-                    
-                    ctx.fillStyle = '#000000';
-                    ctx.font = 'bold 32px Arial';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('🏆 TOTAL PROJECT COST', canvas.width / 2, yPos - 5);
-                    
-                    ctx.font = 'bold 36px Arial';
-                    ctx.fillText(`$${Math.round(calculator.costs.total).toLocaleString()}`, canvas.width / 2, yPos + 30);
-                    
-                    yPos += 60;
-                    ctx.font = '20px Arial';
-                    const costPerSqft = calculator.costs.total / calculator.data.sqft;
-                    ctx.fillText(`Cost per Square Foot: $${costPerSqft.toFixed(2)}`, canvas.width / 2, yPos);
-                    
-                    // Important Notes Section
-                    yPos += 80;
-                    ctx.fillStyle = '#fff3cd';
-                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 140);
-                    ctx.strokeStyle = '#856404';
-                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 140);
-                    
-                    ctx.fillStyle = '#856404';
-                    ctx.font = 'bold 18px Arial';
-                    ctx.textAlign = 'left';
-                    ctx.fillText(`⚠️ IMPORTANT NOTES`, 60, yPos + 10);
-                    
-                    yPos += 35;
-                    ctx.font = '14px Arial';
-                    ctx.fillText(`• This is a preliminary estimate based on current Las Vegas market rates`, 60, yPos);
-                    yPos += 20;
-                    ctx.fillText(`• Final costs may vary based on site conditions and material selection`, 60, yPos);
-                    yPos += 20;
-                    ctx.fillText(`• Estimate valid for 30 days from generation date`, 60, yPos);
-                    yPos += 20;
-                    ctx.fillText(`• Professional consultation recommended for final project planning`, 60, yPos);
-                    
-                    // Contact Footer
-                    yPos = canvas.height - 100;
-                    ctx.fillStyle = '#E5A825';
-                    ctx.fillRect(0, yPos - 20, canvas.width, 120);
-                    
-                    // Try to add smaller logo in footer if main logo loaded
-                    if (logo.complete && logo.naturalHeight !== 0) {
-                        const footerLogoWidth = 80;
-                        const footerLogoHeight = (logo.naturalHeight / logo.naturalWidth) * footerLogoWidth;
-                        const footerLogoX = (canvas.width - footerLogoWidth) / 2;
-                        ctx.drawImage(logo, footerLogoX, yPos - 10, footerLogoWidth, footerLogoHeight);
-                        
-                        ctx.fillStyle = '#000000';
-                        ctx.font = 'bold 16px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.fillText('📍 4485 Riviera Ridge Ave, Las Vegas, NV 89115', canvas.width / 2, yPos + 35);
-                        
-                        ctx.font = '14px Arial';
-                        ctx.fillText('📞 (702) 643-2900 • ✉️ info@aswframing.com', canvas.width / 2, yPos + 55);
-                        
-                        ctx.font = '12px Arial';
-                        ctx.fillText('🌐 www.aswframing.com • Licensed, Bonded & Insured', canvas.width / 2, yPos + 75);
-                    } else {
-                        ctx.fillStyle = '#000000';
-                        ctx.font = 'bold 18px Arial';
-                        ctx.textAlign = 'center';
-                        ctx.fillText('ASF Design - American Southwest Framing', canvas.width / 2, yPos + 15);
-                        
-                        ctx.font = '16px Arial';
-                        ctx.fillText('📍 4485 Riviera Ridge Ave, Las Vegas, NV 89115', canvas.width / 2, yPos + 40);
-                        
-                        ctx.font = '14px Arial';
-                        ctx.fillText('📞 (702) 643-2900 • ✉️ info@aswframing.com', canvas.width / 2, yPos + 60);
-                    }
-                    
-                    // Download the image
-                    const link = document.createElement('a');
-                    const timestamp = new Date().toISOString().slice(0, 10);
-                    link.download = `ASF_Detailed_Estimate_${calculator.data.sqft}sqft_${tierName}_${timestamp}.png`;
-                    link.href = canvas.toDataURL('image/png', 1.0);
-                    link.click();
-                    
-                    alert('✅ Detailed PNG estimate downloaded successfully!');
-                }
-                
-            } catch (error) {
-                console.error('Error generating detailed PNG:', error);
-                alert('❌ Error generating PNG file. Please try again.');
-            }
-        }
-
-        // Enhanced ASF Calculator Class with Smooth Blur Effects
+        // Enhanced ASF Calculator Class with Admin Price Sync
         class ASFCalculator {
             constructor() {
                 this.data = {
@@ -2863,7 +1658,6 @@
                     kitchens: 1,
                     garages: 0,
                     stories: 1,
-                    // New land cost properties
                     land_cost_type: 'none',
                     land_price: 0,
                     land_sqft: 0,
@@ -2886,44 +1680,68 @@
                     commercial: { materials: 0.92, labor: 0.95, profit: 0.16 }
                 };
                 
+                // Default material prices - will be overridden by admin prices if available
+                this.materialPrices = {
+                    concrete: 6.72,
+                    lumber_2x4: 3.74,
+                    lumber_2x6: 7.98,
+                    floor_joists: 18.50,
+                    rebar: 10.94,
+                    framing_nails: 89.97,
+                    roofing_nails: 67.48,
+                    drywall_screws: 18.97,
+                    shingles: 47.12,
+                    roof_underlayment: 89.50,
+                    drywall: 23.98,
+                    joint_compound: 15.75,
+                    flooring: 2.48,
+                    flooring_underlayment: 0.75,
+                    electrical: 146.00,
+                    gfci_outlets: 18.50,
+                    copper_pipe: 28.75,
+                    pex_tubing: 89.00,
+                    insulation: 1.12,
+                    blown_insulation: 12.50
+                };
+                
                 this.materials = [
                     // Foundation & Structure
-                    { name: "90lb Concrete Mix", category: "Foundation", qty_per_sqft: 0.16, price: 6.72, unit: "bags" },
-                    { name: "#4 Rebar 20ft", category: "Foundation", qty_per_sqft: 0.05, price: 10.94, unit: "pieces" },
+                    { name: "90lb Concrete Mix", category: "Foundation", qty_per_sqft: 0.16, priceKey: "concrete", unit: "bags" },
+                    { name: "#4 Rebar 20ft", category: "Foundation", qty_per_sqft: 0.05, priceKey: "rebar", unit: "pieces" },
                     
                     // Framing
-                    { name: "2x4x8 Premium Fir", category: "Framing", qty_per_sqft: 2.1, price: 3.74, unit: "pieces" },
-                    { name: "2x6x8 Douglas Fir", category: "Framing", qty_per_sqft: 0.8, price: 7.98, unit: "pieces" },
-                    { name: "2x8x16 Floor Joists", category: "Framing", qty_per_sqft: 0.4, price: 18.50, unit: "pieces" },
+                    { name: "2x4x8 Premium Fir", category: "Framing", qty_per_sqft: 2.1, priceKey: "lumber_2x4", unit: "pieces" },
+                    { name: "2x6x8 Douglas Fir", category: "Framing", qty_per_sqft: 0.8, priceKey: "lumber_2x6", unit: "pieces" },
+                    { name: "2x8x16 Floor Joists", category: "Framing", qty_per_sqft: 0.4, priceKey: "floor_joists", unit: "pieces" },
                     
                     // Fasteners
-                    { name: "3-1/2\" Framing Nails (50lb)", category: "Fasteners", qty_per_sqft: 0.008, price: 89.97, unit: "boxes" },
-                    { name: "1-1/4\" Roofing Nails (30lb)", category: "Fasteners", qty_per_sqft: 0.006, price: 67.48, unit: "boxes" },
-                    { name: "Drywall Screws (5lb)", category: "Fasteners", qty_per_sqft: 0.003, price: 18.97, unit: "boxes" },
+                    { name: "3-1/2\" Framing Nails (50lb)", category: "Fasteners", qty_per_sqft: 0.008, priceKey: "framing_nails", unit: "boxes" },
+                    { name: "1-1/4\" Roofing Nails (30lb)", category: "Fasteners", qty_per_sqft: 0.006, priceKey: "roofing_nails", unit: "boxes" },
+                    { name: "Drywall Screws (5lb)", category: "Fasteners", qty_per_sqft: 0.003, priceKey: "drywall_screws", unit: "boxes" },
                     
                     // Roofing
-                    { name: "GAF Timberline HDZ Shingles", category: "Roofing", qty_per_sqft: 0.03, price: 47.12, unit: "bundles" },
-                    { name: "Roof Underlayment", category: "Roofing", qty_per_sqft: 0.01, price: 89.50, unit: "rolls" },
+                    { name: "GAF Timberline HDZ Shingles", category: "Roofing", qty_per_sqft: 0.03, priceKey: "shingles", unit: "bundles" },
+                    { name: "Roof Underlayment", category: "Roofing", qty_per_sqft: 0.01, priceKey: "roof_underlayment", unit: "rolls" },
                     
                     // Electrical
-                    { name: "12 AWG Romex 250ft", category: "Electrical", qty_per_sqft: 0.013, price: 146.00, unit: "rolls" },
-                    { name: "GFCI Outlets", category: "Electrical", qty_per_sqft: 0.05, price: 18.50, unit: "pieces" },
+                    { name: "12 AWG Romex 250ft", category: "Electrical", qty_per_sqft: 0.013, priceKey: "electrical", unit: "rolls" },
+                    { name: "GFCI Outlets", category: "Electrical", qty_per_sqft: 0.05, priceKey: "gfci_outlets", unit: "pieces" },
                     
                     // Plumbing
-                    { name: "3/4\" Copper Pipe", category: "Plumbing", qty_per_sqft: 0.15, price: 28.75, unit: "pieces" },
-                    { name: "1/2\" PEX Tubing 100ft", category: "Plumbing", qty_per_sqft: 0.08, price: 89.00, unit: "rolls" },
+                    { name: "3/4\" Copper Pipe", category: "Plumbing", qty_per_sqft: 0.15, priceKey: "copper_pipe", unit: "pieces" },
+                    { name: "1/2\" PEX Tubing 100ft", category: "Plumbing", qty_per_sqft: 0.08, priceKey: "pex_tubing", unit: "rolls" },
                     
                     // Insulation
-                    { name: "R-15 Wall Insulation", category: "Insulation", qty_per_sqft: 1.0, price: 1.12, unit: "sq ft" },
-                    { name: "R-30 Blown-In Insulation", category: "Insulation", qty_per_sqft: 0.04, price: 12.50, unit: "bags" },
+                    { name: "R-15 Wall Insulation", category: "Insulation", qty_per_sqft: 1.0, priceKey: "insulation", unit: "sq ft" },
+                    { name: "R-30 Blown-In Insulation", category: "Insulation", qty_per_sqft: 0.04, priceKey: "blown_insulation", unit: "bags" },
                     
                     // Drywall
-                    { name: "1/2\" Drywall 4x8", category: "Drywall", qty_per_sqft: 0.075, price: 23.98, unit: "sheets" },
-                    { name: "Joint Compound 50lb", category: "Drywall", qty_per_sqft: 0.02, price: 15.75, unit: "buckets" },
+                    { name: "1/2\" Drywall 4x8", category: "Drywall", qty_per_sqft: 0.075, priceKey: "drywall", unit: "sheets" },
+                    { name: "Joint Compound 50lb", category: "Drywall", qty_per_sqft: 0.02, priceKey: "joint_compound", unit: "buckets" },
                     
                     // Flooring
-                    { name: "Laminate Flooring", category: "Flooring", qty_per_sqft: 0.85, price: 2.48, unit: "sq ft" },
-                    { name: "Flooring Underlayment", category: "Flooring", qty_per_sqft: 0.85, price: 0.75, unit: "sq ft" }
+                    { name: "Laminate Flooring", category: "Flooring", qty_per_sqft: 0.85, priceKey: "flooring", unit: "sq ft" },
+                    { name: "Flooring Underlayment", category: "Flooring", qty_per_sqft: 0.85, priceKey: "flooring_underlayment", unit: "sq ft" }
                 ];
                 
                 this.laborRates = [
@@ -2937,7 +1755,6 @@
                     { name: "Interior Finishing", rate: 18.5, timeline: "2-3 weeks" }
                 ];
                 
-                // Blur effect management
                 this.isCalculating = false;
                 this.updateTimeout = null;
                 
@@ -2945,11 +1762,31 @@
             }
             
             init() {
+                this.loadAdminPrices(); // Load admin prices first
                 this.setupEventListeners();
                 this.loadSavedData();
                 this.calculate();
                 this.updateDisplay();
-                console.log('ASF Calculator with enhanced blur effects initialized');
+                console.log('🏗️ ASF Calculator initialized with admin price sync');
+                console.log('💰 Using', Object.keys(this.getAdminPrices()).length, 'custom admin prices');
+            }
+            
+            // Load admin prices from localStorage
+            loadAdminPrices() {
+                const adminPrices = this.getAdminPrices();
+                if (Object.keys(adminPrices).length > 0) {
+                    this.materialPrices = { ...this.materialPrices, ...adminPrices };
+                    console.log('✅ Admin prices loaded:', Object.keys(adminPrices));
+                }
+            }
+            
+            getAdminPrices() {
+                try {
+                    return JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+                } catch (e) {
+                    console.warn('Could not load admin prices');
+                    return {};
+                }
             }
             
             setupEventListeners() {
@@ -2994,49 +1831,28 @@
                     const checkbox = document.getElementById(field);
                     const checkboxGroup = document.querySelector(`[data-checkbox="${field}"]`);
                     
-                    // Original checkbox event
                     checkbox.addEventListener('change', (e) => {
                         this.data[field] = e.target.checked;
                         this.updateWithBlur();
                     });
                     
-                    // Enhanced: Click anywhere in the checkbox group to toggle
                     if (checkboxGroup) {
                         checkboxGroup.addEventListener('click', (e) => {
-                            // Don't double-trigger if clicking directly on checkbox or label
                             if (e.target === checkbox || e.target.tagName === 'LABEL') {
                                 return;
                             }
                             
-                            // Toggle the checkbox
                             checkbox.checked = !checkbox.checked;
                             this.data[field] = checkbox.checked;
                             this.updateWithBlur();
                             
-                            // Add visual feedback
                             checkboxGroup.style.transform = 'scale(0.98)';
                             setTimeout(() => {
                                 checkboxGroup.style.transform = 'translateX(5px)';
                             }, 100);
                         });
                         
-                        // Add enhanced hover cursor
                         checkboxGroup.style.cursor = 'pointer';
-                        
-                        // Add visual feedback for better UX
-                        checkboxGroup.addEventListener('mousedown', () => {
-                            checkboxGroup.style.transform = 'scale(0.98)';
-                        });
-                        
-                        checkboxGroup.addEventListener('mouseup', () => {
-                            setTimeout(() => {
-                                checkboxGroup.style.transform = 'translateX(5px)';
-                            }, 50);
-                        });
-                        
-                        checkboxGroup.addEventListener('mouseleave', () => {
-                            checkboxGroup.style.transform = 'translateX(0)';
-                        });
                     }
                 });
                 
@@ -3047,35 +1863,74 @@
                         this.selectTier(tier);
                     });
                 });
+                
+                // Listen for admin price changes
+                window.addEventListener('storage', (e) => {
+                    if (e.key === 'asfAdminPrices') {
+                        console.log('🔄 Admin prices updated, reloading...');
+                        this.loadAdminPrices();
+                        if (this.data.sqft > 0) {
+                            this.calculate();
+                            this.updateDisplay();
+                        }
+                        this.showPriceUpdateNotification();
+                    }
+                });
             }
             
-            // Enhanced update method with smooth blur transitions
+            showPriceUpdateNotification() {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(45deg, #4caf50, #66bb6a);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    font-weight: bold;
+                    z-index: 10000;
+                    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+                    transform: translateX(400px);
+                    transition: transform 0.3s ease;
+                `;
+                notification.textContent = '✅ Prices updated from admin panel!';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(400px)';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+            
             updateWithBlur() {
-                // Clear any pending updates
                 if (this.updateTimeout) {
                     clearTimeout(this.updateTimeout);
                 }
                 
-                // Start blur effect immediately
                 this.startBlurEffect();
                 
-                // Set a timeout to simulate calculation time and create smooth transition
                 this.updateTimeout = setTimeout(() => {
                     this.calculate();
                     this.updateDisplay();
                     this.saveData();
                     this.endBlurEffect();
-                }, 150); // 150ms delay for smooth effect
+                }, 150);
             }
             
             startBlurEffect() {
                 const previewPanel = document.getElementById('live-preview');
                 const costAmounts = document.querySelectorAll('.cost-amount');
                 
-                // Add calculating state to preview panel
                 previewPanel.classList.add('calculating');
                 
-                // Add updating state to all cost amounts
                 costAmounts.forEach(amount => {
                     amount.classList.remove('updated', 'shimmer');
                     amount.classList.add('updating');
@@ -3088,24 +1943,16 @@
                 const previewPanel = document.getElementById('live-preview');
                 const costAmounts = document.querySelectorAll('.cost-amount');
                 
-                // Remove calculating state and add calculated state
                 previewPanel.classList.remove('calculating');
                 previewPanel.classList.add('calculated');
                 
-                // Remove updating and add updated state with shimmer effect
                 costAmounts.forEach((amount, index) => {
                     setTimeout(() => {
                         amount.classList.remove('updating');
-                        amount.classList.add('updated', 'shimmer');
-                        
-                        // Remove shimmer after animation
-                        setTimeout(() => {
-                            amount.classList.remove('shimmer');
-                        }, 1000);
-                    }, index * 50); // Stagger the updates for a cascading effect
+                        amount.classList.add('updated');
+                    }, index * 50);
                 });
                 
-                // Remove calculated state after animation
                 setTimeout(() => {
                     previewPanel.classList.remove('calculated');
                 }, 600);
@@ -3121,7 +1968,6 @@
                 manualDiv.style.display = this.data.land_cost_type === 'manual' ? 'flex' : 'none';
                 estimateDiv.style.display = this.data.land_cost_type === 'estimate' ? 'flex' : 'none';
                 
-                // Show/hide land cost in preview
                 if (this.data.land_cost_type !== 'none') {
                     landCostItem.style.display = 'flex';
                 } else {
@@ -3146,21 +1992,27 @@
                 
                 const tier = this.tiers[this.data.pricing_tier] || this.tiers.residential;
                 
-                // Calculate materials cost
-                const baseMaterialCost = this.data.sqft * 43.0; // $43 per sq ft base
-                this.costs.materials = baseMaterialCost * tier.materials * 1.08375; // with tax
+                // Calculate materials cost using current prices (includes admin updates)
+                let materialsCost = 0;
+                this.materials.forEach(material => {
+                    const price = this.materialPrices[material.priceKey] || 0;
+                    const quantity = material.qty_per_sqft * this.data.sqft;
+                    materialsCost += quantity * price;
+                });
+                
+                this.costs.materials = materialsCost * tier.materials * 1.08375; // with tax
                 
                 // Calculate labor cost
                 this.costs.labor = 0;
                 if (this.data.include_labor) {
                     this.costs.labor = this.data.sqft * 75.0 * tier.labor;
                     if (this.data.include_specialized) {
-                        this.costs.labor += this.data.sqft * 5.0 * tier.labor; // HVAC, insulation, painting
+                        this.costs.labor += this.data.sqft * 5.0 * tier.labor;
                     }
                 }
                 
                 // Calculate other costs
-                this.costs.other = this.data.sqft * 19.0; // Base $19 per sq ft
+                this.costs.other = this.data.sqft * 19.0;
                 
                 // Add house feature costs
                 if (this.data.windows > 20) this.costs.other += (this.data.windows - 20) * 300;
@@ -3170,7 +2022,7 @@
                 if (this.data.garages > 2) this.costs.other += (this.data.garages - 2) * 5000;
                 if (this.data.stories > 2) this.costs.other += (this.data.stories - 2) * this.data.sqft * 5.0;
                 
-                // Apply tier adjustments to other costs
+                // Apply tier adjustments
                 if (this.data.pricing_tier === 'custom') {
                     this.costs.other *= 1.05;
                 } else if (this.data.pricing_tier === 'commercial') {
@@ -3192,12 +2044,11 @@
                     this.costs.land_cost = this.data.land_sqft * this.data.land_price_per_sqft;
                 }
                 
-                // Calculate total (construction + land)
+                // Calculate total
                 this.costs.total = this.costs.construction_total + this.costs.land_cost;
             }
             
             updateDisplay() {
-                // Update live preview with smooth transitions
                 document.getElementById('materials-cost').textContent = `${Math.round(this.costs.materials).toLocaleString()}`;
                 
                 if (this.data.include_labor) {
@@ -3216,7 +2067,6 @@
                 
                 document.getElementById('construction-total').textContent = `${Math.round(this.costs.construction_total).toLocaleString()}`;
                 
-                // Update land cost display
                 if (this.data.land_cost_type !== 'none') {
                     document.getElementById('land-cost-display').textContent = `${Math.round(this.costs.land_cost).toLocaleString()}`;
                 }
@@ -3230,7 +2080,6 @@
                 const costPerSqft = this.costs.total / this.data.sqft;
                 const laborPerSqft = this.data.include_labor ? this.costs.labor / this.data.sqft : 0;
                 
-                // Update modal summary
                 document.getElementById('project-title').textContent = `Project: ${this.data.sqft.toLocaleString()} Square Feet`;
                 document.getElementById('modal-total-cost').textContent = `${Math.round(this.costs.total).toLocaleString()}`;
                 document.getElementById('cost-per-sqft').textContent = `${Math.round(costPerSqft)} per sq ft`;
@@ -3244,7 +2093,6 @@
                     document.getElementById('labor-per-sqft').textContent = 'Not Included';
                 }
                 
-                // Update detailed breakdowns
                 this.updateCostBreakdown();
                 this.updateMaterialsBreakdown();
                 this.updateLaborBreakdown();
@@ -3299,11 +2147,13 @@
                     }
                     
                     const quantity = Math.ceil(material.qty_per_sqft * this.data.sqft);
-                    const totalCost = quantity * material.price * 1.08375; // with tax
+                    const price = this.materialPrices[material.priceKey] || 0;
+                    const totalCost = quantity * price * 1.08375; // with tax
                     
                     categories[material.category].push({
                         ...material,
                         quantity,
+                        price,
                         totalCost
                     });
                 });
@@ -3441,6 +2291,289 @@
         // Global calculator instance
         let calculator;
         
+        // Enhanced PNG Download Function with Logo Support
+        function downloadEstimateImage() {
+            if (calculator.data.sqft <= 0) {
+                alert('Please enter the square footage first!');
+                document.getElementById('sqft').focus();
+                return;
+            }
+            
+            try {
+                const canvas = document.getElementById('estimate-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = 900;
+                canvas.height = 1400;
+                
+                // Background gradient
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#ffffff');
+                gradient.addColorStop(1, '#f8f9fa');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Try to load logo
+                const logo = new Image();
+                logo.crossOrigin = 'anonymous';
+                
+                logo.onload = function() {
+                    drawEstimateWithLogo();
+                };
+                
+                logo.onerror = function() {
+                    drawEstimateWithTextHeader();
+                };
+                
+                logo.src = 'logo.png';
+                
+                function drawEstimateWithLogo() {
+                    // Clear header
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, 160);
+                    
+                    // Draw logo centered at top
+                    const maxLogoWidth = 250;
+                    const maxLogoHeight = 80;
+                    
+                    let logoWidth = maxLogoWidth;
+                    let logoHeight = (logo.naturalHeight / logo.naturalWidth) * logoWidth;
+                    
+                    if (logoHeight > maxLogoHeight) {
+                        logoHeight = maxLogoHeight;
+                        logoWidth = (logo.naturalWidth / logo.naturalHeight) * logoHeight;
+                    }
+                    
+                    const logoX = (canvas.width - logoWidth) / 2;
+                    const logoY = 20;
+                    
+                    ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
+                    
+                    // Add subtitle
+                    ctx.fillStyle = '#333333';
+                    ctx.font = 'bold 22px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Professional Construction Cost Estimate', canvas.width / 2, logoY + logoHeight + 30);
+                    
+                    ctx.font = '16px Arial';
+                    ctx.fillText('Las Vegas, Nevada • Licensed & Insured • Sales Tax: 8.375%', canvas.width / 2, logoY + logoHeight + 55);
+                    
+                    drawEstimateContent();
+                }
+                
+                function drawEstimateWithTextHeader() {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, 160);
+                    
+                    ctx.fillStyle = '#E5A825';
+                    ctx.font = 'bold 48px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('ASF DESIGN', canvas.width / 2, 60);
+                    
+                    ctx.fillStyle = '#333333';
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillText('Professional Construction Cost Estimate', canvas.width / 2, 100);
+                    
+                    ctx.font = '16px Arial';
+                    ctx.fillText('Las Vegas, Nevada • Licensed & Insured', canvas.width / 2, 125);
+                    
+                    drawEstimateContent();
+                }
+                
+                function drawEstimateContent() {
+                    // Add border line
+                    ctx.strokeStyle = '#E5A825';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 160);
+                    ctx.lineTo(canvas.width, 160);
+                    ctx.stroke();
+                    
+                    let yPos = 200;
+                    
+                    // Project Information
+                    ctx.fillStyle = '#e8f4fd';
+                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 120);
+                    ctx.strokeStyle = '#E5A825';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 120);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 24px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`📊 PROJECT DETAILS`, 60, yPos + 10);
+                    
+                    yPos += 40;
+                    ctx.font = '18px Arial';
+                    const currentDate = new Date().toLocaleDateString();
+                    const tierName = calculator.data.pricing_tier.charAt(0).toUpperCase() + calculator.data.pricing_tier.slice(1);
+                    
+                    ctx.fillText(`• Project Size: ${calculator.data.sqft.toLocaleString()} Square Feet`, 60, yPos);
+                    yPos += 25;
+                    ctx.fillText(`• Estimate Date: ${currentDate}`, 60, yPos);
+                    yPos += 25;
+                    ctx.fillText(`• Pricing Tier: ${tierName} Construction`, 60, yPos);
+                    
+                    // House Specifications
+                    yPos += 60;
+                    ctx.fillStyle = '#fff3cd';
+                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 160);
+                    ctx.strokeStyle = '#E5A825';
+                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 160);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillText(`🏡 HOUSE SPECIFICATIONS`, 60, yPos + 10);
+                    
+                    yPos += 40;
+                    ctx.font = '16px Arial';
+                    
+                    const leftCol = 60;
+                    const rightCol = 480;
+                    
+                    ctx.fillText(`• Windows: ${calculator.data.windows}`, leftCol, yPos);
+                    ctx.fillText(`• Garages: ${calculator.data.garages}`, rightCol, yPos);
+                    yPos += 25;
+                    
+                    ctx.fillText(`• Bedrooms: ${calculator.data.bedrooms}`, leftCol, yPos);
+                    ctx.fillText(`• Stories: ${calculator.data.stories}`, rightCol, yPos);
+                    yPos += 25;
+                    
+                    ctx.fillText(`• Bathrooms: ${calculator.data.bathrooms}`, leftCol, yPos);
+                    ctx.fillText(`• Kitchens: ${calculator.data.kitchens}`, rightCol, yPos);
+                    
+                    // Cost Breakdown
+                    yPos += 80;
+                    ctx.fillStyle = '#d4edda';
+                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 300);
+                    ctx.strokeStyle = '#E5A825';
+                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 300);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillText(`💰 DETAILED COST BREAKDOWN`, 60, yPos + 10);
+                    
+                    yPos += 50;
+                    ctx.font = '18px Arial';
+                    
+                    ctx.fillText(`🧱 Materials Cost (with 8.375% tax):`, 60, yPos);
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`${Math.round(calculator.costs.materials).toLocaleString()}`, canvas.width - 60, yPos);
+                    ctx.textAlign = 'left';
+                    yPos += 30;
+                    
+                    ctx.fillText(`👷 Labor Cost:`, 60, yPos);
+                    ctx.textAlign = 'right';
+                    if (calculator.data.include_labor) {
+                        ctx.fillText(`${Math.round(calculator.costs.labor).toLocaleString()}`, canvas.width - 60, yPos);
+                    } else {
+                        ctx.fillText(`$0 (Not Included)`, canvas.width - 60, yPos);
+                    }
+                    ctx.textAlign = 'left';
+                    yPos += 30;
+                    
+                    ctx.fillText(`📋 Permits & Other Costs:`, 60, yPos);
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`${Math.round(calculator.costs.other).toLocaleString()}`, canvas.width - 60, yPos);
+                    ctx.textAlign = 'left';
+                    yPos += 30;
+                    
+                    ctx.fillText(`💼 Contractor Profit:`, 60, yPos);
+                    ctx.textAlign = 'right';
+                    if (calculator.data.include_profit) {
+                        ctx.fillText(`${Math.round(calculator.costs.profit).toLocaleString()}`, canvas.width - 60, yPos);
+                    } else {
+                        ctx.fillText(`$0 (Not Included)`, canvas.width - 60, yPos);
+                    }
+                    ctx.textAlign = 'left';
+                    yPos += 30;
+                    
+                    if (calculator.data.land_cost_type !== 'none') {
+                        ctx.fillText(`🏞️ Land Cost:`, 60, yPos);
+                        ctx.textAlign = 'right';
+                        ctx.fillText(`${Math.round(calculator.costs.land_cost).toLocaleString()}`, canvas.width - 60, yPos);
+                        ctx.textAlign = 'left';
+                        yPos += 30;
+                    }
+                    
+                    // Total Section
+                    yPos += 50;
+                    ctx.fillStyle = '#E5A825';
+                    ctx.fillRect(40, yPos - 30, canvas.width - 80, 80);
+                    ctx.strokeStyle = '#000000';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(40, yPos - 30, canvas.width - 80, 80);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 32px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('🏆 TOTAL PROJECT COST', canvas.width / 2, yPos - 5);
+                    
+                    ctx.font = 'bold 36px Arial';
+                    ctx.fillText(`${Math.round(calculator.costs.total).toLocaleString()}`, canvas.width / 2, yPos + 30);
+                    
+                    yPos += 60;
+                    ctx.font = '20px Arial';
+                    const costPerSqft = calculator.costs.total / calculator.data.sqft;
+                    ctx.fillText(`Cost per Square Foot: ${costPerSqft.toFixed(2)}`, canvas.width / 2, yPos);
+                    
+                    // Important Notes
+                    yPos += 80;
+                    ctx.fillStyle = '#fff3cd';
+                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 140);
+                    ctx.strokeStyle = '#856404';
+                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 140);
+                    
+                    ctx.fillStyle = '#856404';
+                    ctx.font = 'bold 18px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`⚠️ IMPORTANT NOTES`, 60, yPos + 10);
+                    
+                    yPos += 35;
+                    ctx.font = '14px Arial';
+                    ctx.fillText(`• This is a preliminary estimate based on current Las Vegas market rates`, 60, yPos);
+                    yPos += 20;
+                    ctx.fillText(`• Final costs may vary based on site conditions and material selection`, 60, yPos);
+                    yPos += 20;
+                    ctx.fillText(`• Estimate valid for 30 days from generation date`, 60, yPos);
+                    yPos += 20;
+                    ctx.fillText(`• Professional consultation recommended for final project planning`, 60, yPos);
+                    
+                    // Contact Footer
+                    yPos = canvas.height - 100;
+                    ctx.fillStyle = '#E5A825';
+                    ctx.fillRect(0, yPos - 20, canvas.width, 120);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 18px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('ASF Design - American Southwest Framing', canvas.width / 2, yPos + 15);
+                    
+                    ctx.font = '16px Arial';
+                    ctx.fillText('📍 4485 Riviera Ridge Ave, Las Vegas, NV 89115', canvas.width / 2, yPos + 40);
+                    
+                    ctx.font = '14px Arial';
+                    ctx.fillText('📞 (702) 643-2900 • ✉️ info@aswframing.com', canvas.width / 2, yPos + 60);
+                    
+                    ctx.font = '12px Arial';
+                    ctx.fillText('🌐 www.aswframing.com • Licensed, Bonded & Insured', canvas.width / 2, yPos + 75);
+                    
+                    // Download
+                    const link = document.createElement('a');
+                    const timestamp = new Date().toISOString().slice(0, 10);
+                    link.download = `ASF_Estimate_${calculator.data.sqft}sqft_${tierName}_${timestamp}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.click();
+                    
+                    alert('✅ Detailed PNG estimate downloaded successfully!');
+                }
+                
+            } catch (error) {
+                console.error('Error generating PNG:', error);
+                alert('❌ Error generating PNG file. Please try again.');
+            }
+        }
+        
         // Modal functions
         function openDetailsModal() {
             if (calculator.data.sqft <= 0) {
@@ -3449,27 +2582,22 @@
                 return;
             }
             
-            // Add a nice blur effect to the modal content while loading
             const modal = document.getElementById('details-modal');
             const modalContent = modal.querySelector('.modal-content');
             
             modalContent.style.filter = 'blur(3px)';
             modalContent.style.opacity = '0.7';
             
-            // Show modal immediately
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             
-            // Update modal content with a slight delay for smooth effect
             setTimeout(() => {
                 calculator.updateModal();
                 
-                // Remove blur effect with smooth transition
                 modalContent.style.transition = 'all 0.4s ease';
                 modalContent.style.filter = 'blur(0px)';
                 modalContent.style.opacity = '1';
                 
-                // Add a subtle entrance animation
                 modalContent.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     modalContent.style.transform = 'scale(1)';
@@ -3482,7 +2610,6 @@
             const modal = document.getElementById('details-modal');
             const modalContent = modal.querySelector('.modal-content');
             
-            // Add exit animation
             modalContent.style.transition = 'all 0.3s ease';
             modalContent.style.transform = 'scale(0.95)';
             modalContent.style.opacity = '0.7';
@@ -3491,93 +2618,11 @@
                 modal.style.display = 'none';
                 document.body.style.overflow = 'auto';
                 
-                // Reset modal content styles
                 modalContent.style.transform = 'scale(1)';
                 modalContent.style.opacity = '1';
                 modalContent.style.filter = 'blur(0px)';
             }, 300);
         }
-        
-        // Initialize calculator when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            calculator = new ASFCalculator();
-            
-           // Setup admin access trigger - ENHANCED
-            let clickCount = 0;
-            let clickTimer = null;
-
-            const adminTrigger = document.getElementById('admin-trigger');
-            if (adminTrigger) {
-                adminTrigger.addEventListener('click', function() {
-                    clickCount++;
-                    
-                    if (clickCount === 1) {
-                        clickTimer = setTimeout(() => {
-                            clickCount = 0;
-                        }, 2000);
-                    } else if (clickCount === 5) {
-                        clearTimeout(clickTimer);
-                        clickCount = 0;
-                        
-                        const password = prompt('🔐 Enter admin password:');
-                        if (password === 'asf2025' || password === 'admin') {
-                            openAdminPanel();
-                        } else if (password !== null) {
-                            alert('❌ Incorrect password');
-                        }
-                    }
-                });
-            }
-
-            // Load any saved admin prices on startup
-            updateCalculatorPrices();
-            
-            // Load any saved admin prices
-            updateCalculatorPrices();
-            
-            // Close modal when clicking outside
-            window.addEventListener('click', function(e) {
-                const modal = document.getElementById('details-modal');
-                if (e.target === modal) {
-                    closeModal();
-                }
-                
-                const adminPanel = document.getElementById('admin-panel');
-                if (e.target === adminPanel) {
-                    closeAdminPanel();
-                }
-            });
-            
-            // Add keyboard support for better UX
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    const modal = document.getElementById('details-modal');
-                    const adminPanel = document.getElementById('admin-panel');
-                    
-                    if (modal.style.display === 'block') {
-                        closeModal();
-                    } else if (adminPanel.style.display === 'block') {
-                        closeAdminPanel();
-                    }
-                }
-                
-                // Secret keyboard shortcut: Ctrl+Shift+A
-                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                    e.preventDefault();
-                    const password = prompt('🔐 Enter admin password:');
-                    if (password === 'asf2025' || password === 'admin') {
-                        openAdminPanel();
-                    } else if (password !== null) {
-                        alert('❌ Incorrect password');
-                    }
-                }
-            });
-            
-            console.log('🏗️ ASF Calculator with Admin Panel loaded successfully');
-            console.log('✨ Admin access: Click gear icon 5 times or Ctrl+Shift+A');
-            console.log('🔑 Password: asf2025 or admin');
-            console.log('🌙 Dark mode available in top right corner');
-        });
         
         // Smooth Dissolve Dark Mode Toggle - No Overlays
         function toggleDarkMode() {
@@ -3632,7 +2677,6 @@
             }
         }
         
-        // Load Dark Mode Preference - Fixed
         function loadDarkModePreference() {
             try {
                 const savedMode = localStorage.getItem('darkMode');
@@ -3649,100 +2693,75 @@
             }
         }
         
-        // Initialize dark mode preference on page load - Fixed
+        // Initialize calculator
         document.addEventListener('DOMContentLoaded', function() {
-            // Wait a bit for elements to be fully rendered
+            calculator = new ASFCalculator();
+            
+            // Setup admin access (5 clicks or Ctrl+Shift+A)
+            let clickCount = 0;
+            let clickTimer = null;
+
+            const adminTrigger = document.getElementById('admin-trigger');
+            if (adminTrigger) {
+                adminTrigger.addEventListener('click', function() {
+                    clickCount++;
+                    
+                    if (clickCount === 1) {
+                        clickTimer = setTimeout(() => {
+                            clickCount = 0;
+                        }, 2000);
+                    } else if (clickCount === 5) {
+                        clearTimeout(clickTimer);
+                        clickCount = 0;
+                        
+                        const password = prompt('🔐 Enter admin password:');
+                        if (password === 'asf2025' || password === 'admin') {
+                            window.open('https://raxc19.github.io/ASF-Calculator/admin.html', '_blank');
+                        } else if (password !== null) {
+                            alert('❌ Incorrect password');
+                        }
+                    }
+                });
+            }
+
+            // Load dark mode preference
             setTimeout(() => {
                 loadDarkModePreference();
             }, 100);
-        });
-        
-        // Add some additional visual enhancements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add hover effects to form inputs
-            const inputs = document.querySelectorAll('input[type="number"], select');
-            inputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    this.style.transform = 'scale(1.02)';
-                    this.style.boxShadow = '0 0 15px rgba(255, 215, 0, 0.4)';
-                    this.style.transition = 'all 0.3s ease';
-                });
-                
-                input.addEventListener('blur', function() {
-                    this.style.transform = 'scale(1)';
-                    this.style.boxShadow = 'none';
-                });
+            
+            // Close modal handlers
+            window.addEventListener('click', function(e) {
+                const modal = document.getElementById('details-modal');
+                if (e.target === modal) {
+                    closeModal();
+                }
             });
             
-            // Add pulse effect to calculate button
-            const calculateBtn = document.querySelector('.calculate-btn');
-            if (calculateBtn) {
-                calculateBtn.addEventListener('mouseenter', function() {
-                    this.style.animation = 'pulse 0.6s ease';
-                });
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('details-modal');
+                    if (modal.style.display === 'block') {
+                        closeModal();
+                    }
+                }
                 
-                calculateBtn.addEventListener('animationend', function() {
-                    this.style.animation = '';
-                });
-            }
+                // Admin shortcut: Ctrl+Shift+A
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    e.preventDefault();
+                    const password = prompt('🔐 Enter admin password:');
+                    if (password === 'asf2025' || password === 'admin') {
+                        window.open('https://raxc19.github.io/ASF-Calculator/admin.html', '_blank');
+                    } else if (password !== null) {
+                        alert('❌ Incorrect password');
+                    }
+                }
+            });
             
-            // Add CSS for pulse animation
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes pulse {
-                    0% { transform: scale(1) translateY(-3px); }
-                    50% { transform: scale(1.05) translateY(-5px); }
-                    100% { transform: scale(1) translateY(-3px); }
-                }
-                
-                .form-section input:focus,
-                .form-section select:focus {
-                    outline: none;
-                    border-color: #ffed4e !important;
-                }
-                
-                /* Add subtle animation to tier cards */
-                .tier-card {
-                    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                }
-                
-                .tier-card:hover {
-                    transform: translateY(-5px) scale(1.02);
-                }
-                
-                .tier-card.selected {
-                    animation: selectedGlow 1s ease;
-                }
-                
-                @keyframes selectedGlow {
-                    0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
-                    50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
-                    100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); }
-                }
-                
-                /* Enhanced loading states */
-                .cost-amount.updating {
-                    position: relative;
-                    overflow: hidden;
-                }
-                
-                .cost-amount.updating::after {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 100%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-                    animation: loading-sweep 1.5s infinite;
-                }
-                
-                @keyframes loading-sweep {
-                    0% { left: -100%; }
-                    100% { left: 100%; }
-                }
-            `;
-            document.head.appendChild(style);
+            console.log('🏗️ ASF Calculator loaded successfully');
+            console.log('✨ Admin access: Click gear icon 5 times or Ctrl+Shift+A');
+            console.log('🔑 Password: asf2025 or admin');
+            console.log('💰 Using admin prices:', Object.keys(calculator.getAdminPrices()).length > 0);
         });
     </script>
 </body>
