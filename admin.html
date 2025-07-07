@@ -1053,8 +1053,14 @@
             const attribute = document.getElementById('scrape-attribute').value.trim();
             const frequency = document.getElementById('scrape-frequency').value;
             
-            if (!url || !selector) {
-                showScrapeStatus('❌ Please enter both URL and CSS selector', 'error');
+            if (!url) {
+                showScrapeStatus('❌ Please enter a URL', 'error');
+                return;
+            }
+            
+            // For Home Depot, selector is optional (auto-detected)
+            if (!url.includes('homedepot.com') && !selector) {
+                showScrapeStatus('❌ Please enter CSS selector (or use Home Depot URL for auto-detection)', 'error');
                 return;
             }
             
@@ -1067,7 +1073,7 @@
             const scrapeConfigs = JSON.parse(localStorage.getItem('asfScrapeConfigs') || '{}');
             scrapeConfigs[currentScrapeMaterial] = {
                 url: url,
-                selector: selector,
+                selector: selector || 'auto-detect', // For Home Depot
                 attribute: attribute,
                 frequency: frequency,
                 lastUpdated: new Date().toISOString(),
