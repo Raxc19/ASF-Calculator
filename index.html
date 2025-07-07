@@ -1777,16 +1777,32 @@
                 if (Object.keys(adminPrices).length > 0) {
                     this.materialPrices = { ...this.materialPrices, ...adminPrices };
                     console.log('✅ Admin prices loaded:', Object.keys(adminPrices));
+                    console.log('🔍 Sample admin prices:', adminPrices);
+                } else {
+                    console.log('ℹ️ No admin prices found, using defaults');
                 }
             }
             
             getAdminPrices() {
                 try {
-                    return JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+                    const prices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+                    console.log('📦 Raw admin prices from localStorage:', prices);
+                    return prices;
                 } catch (e) {
-                    console.warn('Could not load admin prices');
+                    console.warn('❌ Could not load admin prices:', e);
                     return {};
                 }
+            }
+            
+            // Add method to manually refresh prices (for testing)
+            refreshAdminPrices() {
+                console.log('🔄 Manually refreshing admin prices...');
+                this.loadAdminPrices();
+                if (this.data.sqft > 0) {
+                    this.calculate();
+                    this.updateDisplay();
+                }
+                console.log('✅ Prices refreshed');
             }
             
             setupEventListeners() {
@@ -1868,6 +1884,7 @@
                 window.addEventListener('storage', (e) => {
                     if (e.key === 'asfAdminPrices') {
                         console.log('🔄 Admin prices updated, reloading...');
+                        console.log('📦 New storage value:', e.newValue);
                         this.loadAdminPrices();
                         if (this.data.sqft > 0) {
                             this.calculate();
@@ -1876,6 +1893,24 @@
                         this.showPriceUpdateNotification();
                     }
                 });
+                
+                // Also check for changes every 2 seconds (backup method)
+                setInterval(() => {
+                    const currentPrices = JSON.stringify(this.getAdminPrices());
+                    if (currentPrices !== this.lastKnownPrices) {
+                        console.log('🔄 Price change detected via polling');
+                        this.lastKnownPrices = currentPrices;
+                        this.loadAdminPrices();
+                        if (this.data.sqft > 0) {
+                            this.calculate();
+                            this.updateDisplay();
+                        }
+                        this.showPriceUpdateNotification();
+                    }
+                }, 2000);
+                
+                // Store initial prices for comparison
+                this.lastKnownPrices = JSON.stringify(this.getAdminPrices());
             }
             
             showPriceUpdateNotification() {
@@ -2573,8 +2608,6 @@
                 alert('❌ Error generating PNG file. Please try again.');
             }
         }
-        
-        // Modal functions
         function openDetailsModal() {
             if (calculator.data.sqft <= 0) {
                 alert('Please enter the square footage first!');
@@ -2762,6 +2795,17 @@
             console.log('✨ Admin access: Click gear icon 5 times or Ctrl+Shift+A');
             console.log('🔑 Password: asf2025 or admin');
             console.log('💰 Using admin prices:', Object.keys(calculator.getAdminPrices()).length > 0);
+            console.log('🔍 Current material prices:', calculator.materialPrices);
+            
+            // Add global function for testing
+            window.testAdminSync = function() {
+                console.log('🧪 Testing admin sync...');
+                console.log('📦 Admin prices in localStorage:', calculator.getAdminPrices());
+                console.log('💰 Current calculator prices:', calculator.materialPrices);
+                calculator.refreshAdminPrices();
+            };
+            
+            console.log('🔧 Type testAdminSync() in console to test price sync');
         });
     </script>
 </body>
