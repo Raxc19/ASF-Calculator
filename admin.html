@@ -1053,14 +1053,20 @@
             const attribute = document.getElementById('scrape-attribute').value.trim();
             const frequency = document.getElementById('scrape-frequency').value;
             
+            console.log('💾 Saving scrape config:', { url, selector, attribute, frequency });
+            
             if (!url) {
                 showScrapeStatus('❌ Please enter a URL', 'error');
                 return;
             }
             
-            // For Home Depot, selector is optional (auto-detected)
-            if (!url.includes('homedepot.com') && !selector) {
-                showScrapeStatus('❌ Please enter CSS selector (or use Home Depot URL for auto-detection)', 'error');
+            // Check if it's Home Depot
+            const isHomeDepot = url.includes('homedepot.com');
+            console.log('🏪 Is Home Depot URL for save:', isHomeDepot);
+            
+            // For non-Home Depot sites, require CSS selector
+            if (!isHomeDepot && !selector) {
+                showScrapeStatus('❌ CSS selector required for non-Home Depot sites', 'error');
                 return;
             }
             
@@ -1081,6 +1087,7 @@
             };
             
             localStorage.setItem('asfScrapeConfigs', JSON.stringify(scrapeConfigs));
+            console.log('✅ Scrape config saved:', scrapeConfigs[currentScrapeMaterial]);
             
             showScrapeStatus('✅ Scraping configuration saved!', 'success');
             
