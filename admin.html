@@ -1269,6 +1269,556 @@
             }
         }
 
+        // COMPLETELY NEW REAL SCRAPING FUNCTION
+        async function testRealScrapingButton() {
+            const url = document.getElementById('scrape-url').value.trim();
+            const status = document.getElementById('scrape-status');
+            
+            console.log('🚀 REAL SCRAPING - Starting with URL:', url);
+            
+            if (!url) {
+                showScrapeStatus('❌ Please enter a URL', 'error');
+                return;
+            }
+            
+            const isHomeDepot = url.includes('homedepot.com');
+            console.log('🏪 REAL SCRAPING - Is Home Depot:', isHomeDepot);
+            
+            if (!isHomeDepot) {
+                showScrapeStatus('❌ Only Home Depot scraping implemented for now', 'error');
+                return;
+            }
+            
+            showScrapeStatus('🧪 Fetching real price data...', 'testing');
+            
+            try {
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                console.log('📡 REAL SCRAPING - Fetching from proxy:', proxyUrl);
+                
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+                
+                if (!data.contents) {
+                    throw new Error('Could not fetch page content from proxy');
+                }
+                
+                console.log('📄 REAL SCRAPING - Content received, length:', data.contents.length);
+                
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data.contents, 'text/html');
+                
+                // Multiple extraction methods
+                let foundPrice = null;
+                
+                // Method 1: Look for specific Home Depot price spans
+                const dollarSpan = doc.querySelector('span.sui-text-9xl, span[class*="text-9xl"]');
+                const centSpan = doc.querySelector('span.sui-text-3xl, span[class*="text-3xl"]');
+                
+                if (dollarSpan && centSpan) {
+                    const dollars = dollarSpan.textContent.trim();
+                    const cents = centSpan.textContent.trim();
+                    console.log('💰 REAL SCRAPING - Found price spans:', { dollars, cents });
+                    
+                    if (/^\d+$/.test(dollars) && /^\d+$/.test(cents)) {
+                        foundPrice = parseFloat(`${dollars}.${cents}`);
+                        console.log('✅ REAL SCRAPING - Method 1 success:', foundPrice);
+                    }
+                }
+                
+                // Method 2: Search for price patterns in text
+                if (!foundPrice) {
+                    const textContent = doc.body.textContent || '';
+                    console.log('🔍 REAL SCRAPING - Searching text content for prices...');
+                    
+                    // Look for $XX.XX patterns
+                    const priceMatches = textContent.match(/\$(\d{1,3})\.(\d{2})/g);
+                    console.log('💰 REAL SCRAPING - Price patterns found:', priceMatches);
+                    
+                    if (priceMatches && priceMatches.length > 0) {
+                        // Take the first reasonable price
+                        for (const match of priceMatches) {
+                            const price = parseFloat(match.replace('
+            const url = document.getElementById('scrape-url').value.trim();
+            const selector = document.getElementById('scrape-selector').value.trim();
+            const attribute = document.getElementById('scrape-attribute').value.trim();
+            const frequency = document.getElementById('scrape-frequency').value;
+            
+            console.log('💾 NEW SAVE - Saving scrape config:', { url, selector, attribute, frequency });
+            
+            if (!url) {
+                showScrapeStatus('❌ Please enter a URL', 'error');
+                return;
+            }
+            
+            const isHomeDepot = url.includes('homedepot.com');
+            console.log('🏪 NEW SAVE - Is Home Depot URL:', isHomeDepot);
+            
+            if (!currentScrapeMaterial) {
+                showScrapeStatus('❌ No material selected', 'error');
+                return;
+            }
+            
+            // Save configuration
+            const scrapeConfigs = JSON.parse(localStorage.getItem('asfScrapeConfigs') || '{}');
+            scrapeConfigs[currentScrapeMaterial] = {
+                url: url,
+                selector: selector || 'auto-detect',
+                attribute: attribute,
+                frequency: frequency,
+                lastUpdated: new Date().toISOString(),
+                enabled: true,
+                isHomeDepot: isHomeDepot
+            };
+            
+            localStorage.setItem('asfScrapeConfigs', JSON.stringify(scrapeConfigs));
+            console.log('✅ NEW SAVE - Config saved:', scrapeConfigs[currentScrapeMaterial]);
+            
+            showScrapeStatus('✅ Scraping configuration saved!', 'success');
+            
+            setTimeout(() => {
+                closeScrapeModal();
+                showNotification(`🌐 Auto-scraping configured for ${currentScrapeMaterial.replace(/_/g, ' ')}`, 'success');
+            }, 2000);
+        }
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active from nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active to clicked nav item
+            event.target.classList.add('active');
+        }
+
+        function openMainSite() {
+            // Open your main calculator at the correct GitHub Pages URL
+            window.open('https://raxc19.github.io/ASF-Calculator/', '_blank');
+        }
+
+        function updatePrice(materialKey, newPrice) {
+            const price = parseFloat(newPrice);
+            if (isNaN(price) || price < 0) {
+                showNotification('❌ Please enter a valid price', 'error');
+                return;
+            }
+            
+            // Save to localStorage (will sync with main calculator)
+            const savedPrices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+            savedPrices[materialKey] = price;
+            localStorage.setItem('asfAdminPrices', JSON.stringify(savedPrices));
+            
+            // Update last modified time
+            const now = new Date().toLocaleString();
+            document.getElementById('last-update-display').textContent = now;
+            localStorage.setItem('asfLastUpdate', now);
+            
+            // Update stats
+            updateStats();
+            
+            showNotification(`✅ ${materialKey.replace(/_/g, ' ')} updated to ${price.toFixed(2)}`, 'success');
+        }
+
+        function saveAllPrices() {
+            const priceInputs = document.querySelectorAll('.price-input');
+            const prices = {};
+            let updateCount = 0;
+            
+            priceInputs.forEach(input => {
+                const materialKey = input.dataset.material;
+                const price = parseFloat(input.value);
+                if (!isNaN(price) && price >= 0) {
+                    prices[materialKey] = price;
+                    updateCount++;
+                }
+            });
+            
+            localStorage.setItem('asfAdminPrices', JSON.stringify(prices));
+            const now = new Date().toLocaleString();
+            document.getElementById('last-update-display').textContent = now;
+            localStorage.setItem('asfLastUpdate', now);
+            
+            updateStats();
+            showNotification(`💾 All prices saved! ${updateCount} materials updated.`, 'success');
+        }
+
+        function resetToDefaults() {
+            if (confirm('🔄 Reset all prices to defaults?\n\nThis will restore original ASF pricing and cannot be undone.')) {
+                localStorage.removeItem('asfAdminPrices');
+                
+                // Reset input values to defaults
+                const defaults = {
+                    'concrete': 6.72,
+                    'lumber_2x4': 3.74,
+                    'lumber_2x6': 7.98,
+                    'floor_joists': 18.50,
+                    'rebar': 10.94,
+                    'framing_nails': 89.97,
+                    'roofing_nails': 67.48,
+                    'drywall_screws': 18.97,
+                    'shingles': 47.12,
+                    'roof_underlayment': 89.50,
+                    'drywall': 23.98,
+                    'joint_compound': 15.75,
+                    'flooring': 2.48,
+                    'flooring_underlayment': 0.75,
+                    'electrical': 146.00,
+                    'gfci_outlets': 18.50,
+                    'copper_pipe': 28.75,
+                    'pex_tubing': 89.00,
+                    'insulation': 1.12,
+                    'blown_insulation': 12.50
+                };
+                
+                // Update input fields
+                Object.entries(defaults).forEach(([key, value]) => {
+                    const input = document.querySelector(`[data-material="${key}"]`);
+                    if (input) {
+                        input.value = value.toFixed(2);
+                    }
+                });
+                
+                const now = new Date().toLocaleString();
+                document.getElementById('last-update-display').textContent = now;
+                localStorage.setItem('asfLastUpdate', now);
+                
+                updateStats();
+                showNotification('✅ All prices reset to ASF defaults', 'success');
+            }
+        }
+
+        function exportPrices() {
+            const prices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+            const timestamp = new Date().toISOString().slice(0, 10);
+            
+            let exportText = `ASF Design - Material Price Export\n`;
+            exportText += `Generated: ${new Date().toLocaleString()}\n`;
+            exportText += `Location: Las Vegas, Nevada\n`;
+            exportText += `=`.repeat(50) + '\n\n';
+            
+            exportText += `CURRENT MATERIAL PRICES:\n`;
+            exportText += `-`.repeat(30) + '\n';
+            
+            if (Object.keys(prices).length === 0) {
+                exportText += `No custom prices set - using ASF defaults\n`;
+            } else {
+                for (const [material, price] of Object.entries(prices)) {
+                    const displayName = material.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    exportText += `${displayName}: ${parseFloat(price).toFixed(2)}\n`;
+                }
+            }
+            
+            exportText += `\n` + `=`.repeat(50) + '\n';
+            exportText += `ASF Design - American Southwest Framing\n`;
+            exportText += `Professional Construction Services\n`;
+            exportText += `Las Vegas, Nevada\n`;
+            exportText += `Contact: (702) 643-2900\n`;
+            exportText += `Email: info@aswframing.com\n`;
+            
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `ASF_Material_Prices_${timestamp}.txt`;
+            link.click();
+            
+            showNotification('📤 Material price list exported successfully!', 'success');
+        }
+
+        function syncToCalculator() {
+            showNotification('🔄 Prices automatically sync via localStorage. Refresh your calculator to see updates!', 'success');
+        }
+
+        function createBackup() {
+            const timestamp = new Date().toISOString();
+            const prices = localStorage.getItem('asfAdminPrices') || '{}';
+            const backup = {
+                timestamp: timestamp,
+                prices: JSON.parse(prices),
+                version: '1.0',
+                source: 'ASF Design Admin Panel'
+            };
+            
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `ASF_Backup_${timestamp.slice(0, 10)}.json`;
+            link.click();
+            
+            showNotification('💾 Backup created successfully!', 'success');
+        }
+
+        function autoSync() {
+            showNotification('🔄 Auto sync enabled! Prices are automatically synchronized via localStorage.', 'success');
+        }
+
+        function importPrices() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const backup = JSON.parse(e.target.result);
+                            if (backup.prices) {
+                                localStorage.setItem('asfAdminPrices', JSON.stringify(backup.prices));
+                                loadSavedPrices();
+                                updateStats();
+                                showNotification('📥 Prices imported successfully!', 'success');
+                            } else {
+                                showNotification('❌ Invalid backup file format', 'error');
+                            }
+                        } catch (error) {
+                            showNotification('❌ Error reading backup file', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            
+            input.click();
+        }
+
+        function restoreBackup(backupId) {
+            showNotification('📁 Backup restore feature coming soon!', 'warning');
+        }
+
+        function saveSettings() {
+            showNotification('⚙️ Settings saved successfully!', 'success');
+        }
+
+        function regenerateKey() {
+            const newKey = 'asf_' + Math.random().toString(36).substr(2, 16);
+            showNotification(`🔑 New API key generated: ${newKey}`, 'success');
+        }
+
+        function testCalculatorConnection() {
+            // Test if we can access the calculator URL
+            const url = 'https://raxc19.github.io/ASF-Calculator/';
+            
+            // Since we can't actually test cross-origin requests, we'll just open it
+            window.open(url, '_blank');
+            showNotification('🔗 Opening calculator to test connection...', 'success');
+        }
+
+        function updateStats() {
+            const savedPrices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+            const totalInputs = document.querySelectorAll('.price-input').length;
+            const customPrices = Object.keys(savedPrices).length;
+            
+            document.getElementById('total-materials').textContent = totalInputs;
+            document.getElementById('price-updates').textContent = customPrices;
+            
+            // Update last sync time
+            const lastUpdate = localStorage.getItem('asfLastUpdate');
+            if (lastUpdate) {
+                const updateTime = new Date(lastUpdate);
+                const now = new Date();
+                const diffMinutes = Math.floor((now - updateTime) / (1000 * 60));
+                
+                if (diffMinutes < 60) {
+                    document.getElementById('last-sync').textContent = `${diffMinutes}m`;
+                } else {
+                    const diffHours = Math.floor(diffMinutes / 60);
+                    document.getElementById('last-sync').textContent = `${diffHours}h`;
+                }
+            }
+        }
+
+        function loadSavedPrices() {
+            const savedPrices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+            
+            // Load saved prices into inputs
+            Object.entries(savedPrices).forEach(([key, value]) => {
+                const input = document.querySelector(`[data-material="${key}"]`);
+                if (input) {
+                    input.value = parseFloat(value).toFixed(2);
+                }
+            });
+            
+            // Update last update display
+            const lastUpdate = localStorage.getItem('asfLastUpdate');
+            if (lastUpdate) {
+                document.getElementById('last-update-display').textContent = lastUpdate;
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            container.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Hide and remove notification
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    container.removeChild(notification);
+                }, 300);
+            }, 4000);
+        }
+
+        // Initialize admin panel on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedPrices();
+            updateStats();
+            
+            console.log('🔧 ASF Admin Panel loaded successfully');
+            console.log('📊 Total materials:', document.querySelectorAll('.price-input').length);
+            console.log('💾 Custom prices:', Object.keys(JSON.parse(localStorage.getItem('asfAdminPrices') || '{}')).length);
+            console.log('🔍 Current admin prices:', JSON.parse(localStorage.getItem('asfAdminPrices') || '{}'));
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('🔧 ASF Admin Panel ready! Update prices and they will sync automatically.', 'success');
+            }, 1000);
+            
+            // Add test function
+            window.testPriceSave = function(materialKey = 'concrete', price = 999.99) {
+                console.log('🧪 Testing price save...');
+                updatePrice(materialKey, price);
+                console.log('📦 Result in localStorage:', JSON.parse(localStorage.getItem('asfAdminPrices') || '{}'));
+            };
+            
+            console.log('🔧 Type testPriceSave() in console to test price saving');
+            console.log('🔧 Type testRealScraping() in console to test real Home Depot scraping');
+            
+            // Add direct test function
+            window.testRealScraping = async function() {
+                const url = 'https://www.homedepot.com/p/1-2-in-x-20-ft-4-Rebar-REB-4-615G4-20/202532809';
+                console.log('🧪 DIRECT TEST - Testing real scraping for:', url);
+                
+                try {
+                    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                    console.log('📡 DIRECT TEST - Fetching from:', proxyUrl);
+                    
+                    const response = await fetch(proxyUrl);
+                    const data = await response.json();
+                    
+                    if (data.contents) {
+                        console.log('📄 DIRECT TEST - Got content, length:', data.contents.length);
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(data.contents, 'text/html');
+                        
+                        // Search for price patterns
+                        const textContent = doc.body.textContent || '';
+                        console.log('🔍 DIRECT TEST - Searching for prices in content...');
+                        
+                        // Look for $XX.XX patterns
+                        const priceMatches = textContent.match(/\$(\d+)\.(\d{2})/g);
+                        console.log('💰 DIRECT TEST - Found price patterns:', priceMatches);
+                        
+                        // Look for XX.XX patterns
+                        const numberMatches = textContent.match(/(\d{1,3})\.(\d{2})/g);
+                        console.log('🔢 DIRECT TEST - Found number patterns:', numberMatches);
+                        
+                        return { priceMatches, numberMatches };
+                    } else {
+                        console.log('❌ DIRECT TEST - No content received');
+                    }
+                } catch (error) {
+                    console.error('❌ DIRECT TEST - Error:', error);
+                }
+            };
+        });
+
+        // Auto-save functionality
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('price-input')) {
+                // Auto-save after user stops typing for 2 seconds
+                clearTimeout(window.autoSaveTimeout);
+                window.autoSaveTimeout = setTimeout(() => {
+                    const materialKey = e.target.dataset.material;
+                    const price = parseFloat(e.target.value);
+                    if (!isNaN(price) && price >= 0) {
+                        updatePrice(materialKey, price);
+                    }
+                }, 2000);
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+S to save all prices
+            if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                saveAllPrices();
+            }
+            
+            // Ctrl+E to export prices
+            if (e.ctrlKey && e.key === 'e') {
+                e.preventDefault();
+                exportPrices();
+            }
+            
+            // Ctrl+B to create backup
+            if (e.ctrlKey && e.key === 'b') {
+                e.preventDefault();
+                createBackup();
+            }
+        });
+    </script>
+</body>
+</html>, ''));
+                            if (price > 1 && price < 1000) {
+                                foundPrice = price;
+                                console.log('✅ REAL SCRAPING - Method 2 success:', foundPrice);
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // Method 3: Look for any XX.XX patterns
+                if (!foundPrice) {
+                    const textContent = doc.body.textContent || '';
+                    const numberMatches = textContent.match(/(\d{1,3})\.(\d{2})/g);
+                    console.log('🔢 REAL SCRAPING - Number patterns found:', numberMatches);
+                    
+                    if (numberMatches && numberMatches.length > 0) {
+                        // Take the first reasonable price in material range
+                        for (const match of numberMatches) {
+                            const price = parseFloat(match);
+                            if (price > 5 && price < 500) { // Reasonable range for building materials
+                                foundPrice = price;
+                                console.log('✅ REAL SCRAPING - Method 3 success:', foundPrice);
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if (foundPrice) {
+                    showScrapeStatus(`✅ SUCCESS! Found price: ${foundPrice.toFixed(2)}`, 'success');
+                    updatePriceInput(foundPrice);
+                } else {
+                    showScrapeStatus('❌ Could not extract price from page', 'error');
+                    console.log('❌ REAL SCRAPING - All methods failed to find price');
+                }
+                
+            } catch (error) {
+                console.error('❌ REAL SCRAPING - Error:', error);
+                showScrapeStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
         function saveScrapeConfigNew() {
             const url = document.getElementById('scrape-url').value.trim();
             const selector = document.getElementById('scrape-selector').value.trim();
