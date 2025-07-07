@@ -883,8 +883,8 @@
                         Price Selector (CSS):
                     </label>
                     <input type="text" id="scrape-selector" class="scrape-input" 
-                           placeholder=".price-display, #price, [data-price]" 
-                           title="CSS selector for the price element">
+                           placeholder="Leave empty for Home Depot auto-detection" 
+                           title="CSS selector for the price element (optional for Home Depot)">
                 </div>
                 
                 <div>
@@ -1096,6 +1096,13 @@
             status.textContent = message;
             status.className = `scrape-status ${type}`;
             status.style.display = 'block';
+            
+            // Auto-hide error messages after 5 seconds
+            if (type === 'error') {
+                setTimeout(() => {
+                    status.style.display = 'none';
+                }, 5000);
+            }
         }
 
         // Auto-scraping function
