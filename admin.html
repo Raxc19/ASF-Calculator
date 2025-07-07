@@ -1630,6 +1630,45 @@
             };
             
             console.log('🔧 Type testPriceSave() in console to test price saving');
+            console.log('🔧 Type testRealScraping() in console to test real Home Depot scraping');
+            
+            // Add direct test function
+            window.testRealScraping = async function() {
+                const url = 'https://www.homedepot.com/p/1-2-in-x-20-ft-4-Rebar-REB-4-615G4-20/202532809';
+                console.log('🧪 DIRECT TEST - Testing real scraping for:', url);
+                
+                try {
+                    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                    console.log('📡 DIRECT TEST - Fetching from:', proxyUrl);
+                    
+                    const response = await fetch(proxyUrl);
+                    const data = await response.json();
+                    
+                    if (data.contents) {
+                        console.log('📄 DIRECT TEST - Got content, length:', data.contents.length);
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(data.contents, 'text/html');
+                        
+                        // Search for price patterns
+                        const textContent = doc.body.textContent || '';
+                        console.log('🔍 DIRECT TEST - Searching for prices in content...');
+                        
+                        // Look for $XX.XX patterns
+                        const priceMatches = textContent.match(/\$(\d+)\.(\d{2})/g);
+                        console.log('💰 DIRECT TEST - Found price patterns:', priceMatches);
+                        
+                        // Look for XX.XX patterns
+                        const numberMatches = textContent.match(/(\d{1,3})\.(\d{2})/g);
+                        console.log('🔢 DIRECT TEST - Found number patterns:', numberMatches);
+                        
+                        return { priceMatches, numberMatches };
+                    } else {
+                        console.log('❌ DIRECT TEST - No content received');
+                    }
+                } catch (error) {
+                    console.error('❌ DIRECT TEST - Error:', error);
+                }
+            };
         });
 
         // Auto-save functionality
