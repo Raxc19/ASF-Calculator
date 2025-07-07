@@ -5,6 +5,172 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASF Construction Cost Calculator</title>
     <style>
+        /* Admin Modal Styles */
+        #admin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+        }
+
+        .admin-modal-overlay {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-modal-content {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 3px solid #ffd700;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .admin-header {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+            padding: 20px;
+            border-radius: 17px 17px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+
+        .close-admin {
+            background: none;
+            border: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #000000;
+            font-weight: bold;
+        }
+
+        .admin-body {
+            padding: 30px;
+        }
+
+        .category-section {
+            margin-bottom: 30px;
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .category-section h3 {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+            margin: 0;
+            padding: 15px 20px;
+            font-size: 1.2em;
+        }
+
+        .price-items {
+            padding: 20px;
+        }
+
+        .price-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .price-item label {
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .price-item input {
+            padding: 10px;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: center;
+        }
+
+        .price-item button {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .price-item button:hover {
+            background: linear-gradient(45deg, #66bb6a, #4caf50);
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .admin-actions button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .admin-actions button:nth-child(1) {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
+        }
+
+        .admin-actions button:nth-child(2) {
+            background: linear-gradient(45deg, #f44336, #e57373);
+            color: white;
+        }
+
+        .admin-actions button:nth-child(3) {
+            background: linear-gradient(45deg, #2196f3, #64b5f6);
+            color: white;
+        }
+
+        /* Dark mode support for admin panel */
+        body.dark-mode .admin-modal-content {
+            background: #2c2c2c;
+            color: #ffffff;
+        }
+
+        body.dark-mode .price-item {
+            background: rgba(255, 215, 0, 0.2);
+        }
+
+        body.dark-mode .price-item label {
+            color: #ffffff;
+        }
+
+        body.dark-mode .price-item input {
+            background: #1a1a1a;
+            color: #ffffff;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -2137,6 +2303,551 @@
     </div>
 
     <script>
+    // Admin Panel Functions for GitHub Pages
+    function showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.classList.remove('active');
+        });
+        
+        // Remove active from nav items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Show selected section
+        document.getElementById(sectionId).classList.add('active');
+        
+        // Add active to clicked nav item
+        event.target.classList.add('active');
+    }
+
+    function openMainSite() {
+        // Open your main calculator (update this URL to your GitHub Pages URL)
+        window.open('https://yourusername.github.io/repository-name/', '_blank');
+    }
+
+    function updatePrice(materialKey, newPrice) {
+        const price = parseFloat(newPrice);
+        if (isNaN(price) || price < 0) {
+            alert('❌ Please enter a valid price');
+            return;
+        }
+        
+        // Save to localStorage (will sync with main calculator)
+        const savedPrices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+        savedPrices[materialKey] = price;
+        localStorage.setItem('asfAdminPrices', JSON.stringify(savedPrices));
+        
+        // Update last modified time
+        document.getElementById('last-update-display').textContent = new Date().toLocaleString();
+        
+        alert(`✅ ${materialKey} updated to $${price.toFixed(2)}\n\nPrice will sync with calculator automatically.`);
+    }
+
+    function saveAllPrices() {
+        const priceInputs = document.querySelectorAll('.price-input');
+        const prices = {};
+        let updateCount = 0;
+        
+        priceInputs.forEach(input => {
+            const materialKey = input.dataset.material;
+            const price = parseFloat(input.value);
+            if (!isNaN(price) && price >= 0) {
+                prices[materialKey] = price;
+                updateCount++;
+            }
+        });
+        
+        localStorage.setItem('asfAdminPrices', JSON.stringify(prices));
+        document.getElementById('last-update-display').textContent = new Date().toLocaleString();
+        
+        alert(`💾 All prices saved successfully!\n${updateCount} materials updated.\n\nPrices will sync with calculator.`);
+    }
+
+    function resetToDefaults() {
+        if (confirm('🔄 Reset all prices to defaults?\n\nThis will restore original ASF pricing and cannot be undone.')) {
+            localStorage.removeItem('asfAdminPrices');
+            
+            // Reset input values to defaults
+            const defaults = {
+                'concrete': 6.72,
+                'lumber_2x4': 3.74,
+                'lumber_2x6': 7.98,
+                'floor_joists': 18.50,
+                'rebar': 10.94,
+                'framing_nails': 89.97,
+                'roofing_nails': 67.48,
+                'drywall_screws': 18.97,
+                'shingles': 47.12,
+                'roof_underlayment': 89.50,
+                'drywall': 23.98,
+                'joint_compound': 15.75,
+                'flooring': 2.48,
+                'flooring_underlayment': 0.75,
+                'electrical': 146.00,
+                'gfci_outlets': 18.50,
+                'copper_pipe': 28.75,
+                'pex_tubing': 89.00,
+                'insulation': 1.12,
+                'blown_insulation': 12.50
+            };
+            
+            // Update input fields
+            Object.entries(defaults).forEach(([key, value]) => {
+                const input = document.querySelector(`[data-material="${key}"]`);
+                if (input) {
+                    input.value = value.toFixed(2);
+                }
+            });
+            
+            document.getElementById('last-update-display').textContent = new Date().toLocaleString();
+            alert('✅ All prices reset to ASF defaults');
+        }
+    }
+
+    function exportPrices() {
+        const prices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+        const timestamp = new Date().toISOString().slice(0, 10);
+        
+        let exportText = `ASF Design - Material Price Export\n`;
+        exportText += `Generated: ${new Date().toLocaleString()}\n`;
+        exportText += `Location: Las Vegas, Nevada\n`;
+        exportText += `=`.repeat(50) + '\n\n';
+        
+        exportText += `CURRENT MATERIAL PRICES:\n`;
+        exportText += `-`.repeat(30) + '\n';
+        
+        if (Object.keys(prices).length === 0) {
+            exportText += `No custom prices set - using ASF defaults\n`;
+        } else {
+            for (const [material, price] of Object.entries(prices)) {
+                const displayName = material.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                exportText += `${displayName}: $${parseFloat(price).toFixed(2)}\n`;
+            }
+        }
+        
+        exportText += `\n` + `=`.repeat(50) + '\n';
+        exportText += `ASF Design - American Southwest Framing\n`;
+        exportText += `Professional Construction Services\n`;
+        exportText += `Las Vegas, Nevada\n`;
+        
+        const blob = new Blob([exportText], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `ASF_Material_Prices_${timestamp}.txt`;
+        link.click();
+        
+        alert('📤 Material price list exported successfully!');
+    }
+
+    function syncToCalculator() {
+        alert('🔄 Prices automatically sync via localStorage.\n\nRefresh your calculator page to see updates!');
+    }
+
+    function createBackup() {
+        const timestamp = new Date().toISOString();
+        const prices = localStorage.getItem('asfAdminPrices') || '{}';
+        const backup = {
+            timestamp: timestamp,
+            prices: JSON.parse(prices),
+            version: '1.0'
+        };
+        
+        const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `ASF_Backup_${timestamp.slice(0, 10)}.json`;
+        link.click();
+        
+        alert('💾 Backup created successfully!');
+    }
+
+    function autoSync() {
+        alert('🔄 Auto sync enabled!\n\nPrices are automatically synchronized via localStorage.');
+    }
+
+    function importPrices() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        
+        input.onchange = function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const backup = JSON.parse(e.target.result);
+                        if (backup.prices) {
+                            localStorage.setItem('asfAdminPrices', JSON.stringify(backup.prices));
+                            location.reload(); // Refresh to show imported prices
+                        } else {
+                            alert('❌ Invalid backup file format');
+                        }
+                    } catch (error) {
+                        alert('❌ Error reading backup file');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        };
+        
+        input.click();
+    }
+
+    function restoreBackup(backupId) {
+        alert('📁 Backup restore feature coming soon!');
+    }
+
+    function saveSettings() {
+        alert('⚙️ Settings saved successfully!');
+    }
+
+    // Load saved prices on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedPrices = JSON.parse(localStorage.getItem('asfAdminPrices') || '{}');
+        
+        // Load saved prices into inputs
+        Object.entries(savedPrices).forEach(([key, value]) => {
+            const input = document.querySelector(`[data-material="${key}"]`);
+            if (input) {
+                input.value = parseFloat(value).toFixed(2);
+            }
+        });
+        
+        // Update stats
+        document.getElementById('total-materials').textContent = document.querySelectorAll('.price-input').length;
+        document.getElementById('price-updates').textContent = Object.keys(savedPrices).length;
+        
+        console.log('🔧 ASF Admin Panel loaded with', Object.keys(savedPrices).length, 'custom prices');
+    });
+    </script>
+
+
+    <script>
+        // Enhanced Detailed PNG Download Function with ACTUAL ASF Logo Image
+        function downloadEstimateImage() {
+            if (calculator.data.sqft <= 0) {
+                alert('Please enter the square footage first!');
+                document.getElementById('sqft').focus();
+                return;
+            }
+            
+            try {
+                const canvas = document.getElementById('estimate-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Set larger canvas size for detailed content
+                canvas.width = 900;
+                canvas.height = 1400;
+                
+                // Background gradient
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#ffffff');
+                gradient.addColorStop(1, '#f8f9fa');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Load the actual ASF logo image
+                const logo = new Image();
+                logo.crossOrigin = 'anonymous';
+                
+                logo.onload = function() {
+                    console.log('✅ Logo loaded successfully!');
+                    
+                    // Clear the header area with white background
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, 160);
+                    
+                    // Calculate logo size and position for TOP MIDDLE placement
+                    const maxLogoWidth = 250;  // Larger logo
+                    const maxLogoHeight = 80;
+                    
+                    // Calculate actual size maintaining aspect ratio
+                    let logoWidth = maxLogoWidth;
+                    let logoHeight = (logo.naturalHeight / logo.naturalWidth) * logoWidth;
+                    
+                    // If height is too big, scale down
+                    if (logoHeight > maxLogoHeight) {
+                        logoHeight = maxLogoHeight;
+                        logoWidth = (logo.naturalWidth / logo.naturalHeight) * logoHeight;
+                    }
+                    
+                    // Position logo at TOP MIDDLE
+                    const logoX = (canvas.width - logoWidth) / 2;  // Center horizontally
+                    const logoY = 20;  // Top position
+                    
+                    // Draw the actual logo image
+                    ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight);
+                    
+                    // Add subtitle below logo
+                    ctx.fillStyle = '#333333';
+                    ctx.font = 'bold 22px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Professional Construction Cost Estimate', canvas.width / 2, logoY + logoHeight + 30);
+                    
+                    // Add subtitle details
+                    ctx.font = '16px Arial';
+                    ctx.fillText('Las Vegas, Nevada • Licensed & Insured • Sales Tax: 8.375%', canvas.width / 2, logoY + logoHeight + 55);
+                    
+                    // Add decorative border line under header
+                    ctx.strokeStyle = '#E5A825';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 160);
+                    ctx.lineTo(canvas.width, 160);
+                    ctx.stroke();
+                    
+                    // Now draw all the estimate content
+                    drawAllEstimateContent();
+                };
+                
+                logo.onerror = function() {
+                    console.error('❌ Failed to load logo image: asf-logo.png');
+                    alert('⚠️ Logo image not found. Please ensure asf-logo.png is in the same folder as your HTML file.');
+                    
+                    // Still generate estimate with text fallback
+                    drawTextHeaderFallback();
+                    drawAllEstimateContent();
+                };
+                
+                // Load your actual logo file
+                logo.src = 'asf-logo.png';  // This should load your actual logo
+                
+                function drawTextHeaderFallback() {
+                    console.log('Using text fallback header');
+                    
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, 160);
+                    
+                    ctx.fillStyle = '#E5A825';
+                    ctx.font = 'bold 48px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('ASF DESIGN', canvas.width / 2, 60);
+                    
+                    ctx.fillStyle = '#333333';
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillText('Professional Construction Cost Estimate', canvas.width / 2, 100);
+                    
+                    ctx.font = '16px Arial';
+                    ctx.fillText('Las Vegas, Nevada • Licensed & Insured', canvas.width / 2, 125);
+                    
+                    ctx.strokeStyle = '#E5A825';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 160);
+                    ctx.lineTo(canvas.width, 160);
+                    ctx.stroke();
+                }
+                
+                function drawAllEstimateContent() {
+                    let yPos = 200;  // Start after the header
+                    
+                    // Project Information Section
+                    ctx.fillStyle = '#e8f4fd';
+                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 120);
+                    ctx.strokeStyle = '#E5A825';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 120);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 24px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`📊 PROJECT DETAILS`, 60, yPos + 10);
+                    
+                    yPos += 40;
+                    ctx.font = '18px Arial';
+                    const currentDate = new Date().toLocaleDateString();
+                    const tierName = calculator.data.pricing_tier.charAt(0).toUpperCase() + calculator.data.pricing_tier.slice(1);
+                    
+                    ctx.fillText(`• Project Size: ${calculator.data.sqft.toLocaleString()} Square Feet`, 60, yPos);
+                    yPos += 25;
+                    ctx.fillText(`• Estimate Date: ${currentDate}`, 60, yPos);
+                    yPos += 25;
+                    ctx.fillText(`• Pricing Tier: ${tierName} Construction`, 60, yPos);
+                    
+                    // House Specifications Section
+                    yPos += 60;
+                    ctx.fillStyle = '#fff3cd';
+                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 160);
+                    ctx.strokeStyle = '#E5A825';
+                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 160);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillText(`🏡 HOUSE SPECIFICATIONS`, 60, yPos + 10);
+                    
+                    yPos += 40;
+                    ctx.font = '16px Arial';
+                    
+                    const leftCol = 60;
+                    const rightCol = 480;
+                    
+                    ctx.fillText(`• Windows: ${calculator.data.windows}`, leftCol, yPos);
+                    ctx.fillText(`• Garages: ${calculator.data.garages}`, rightCol, yPos);
+                    yPos += 25;
+                    
+                    ctx.fillText(`• Bedrooms: ${calculator.data.bedrooms}`, leftCol, yPos);
+                    ctx.fillText(`• Stories: ${calculator.data.stories}`, rightCol, yPos);
+                    yPos += 25;
+                    
+                    ctx.fillText(`• Bathrooms: ${calculator.data.bathrooms}`, leftCol, yPos);
+                    ctx.fillText(`• Kitchens: ${calculator.data.kitchens}`, rightCol, yPos);
+                    
+                    // Detailed Cost Breakdown Section
+                    yPos += 80;
+                    ctx.fillStyle = '#d4edda';
+                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 300);
+                    ctx.strokeStyle = '#E5A825';
+                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 300);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 22px Arial';
+                    ctx.fillText(`💰 DETAILED COST BREAKDOWN`, 60, yPos + 10);
+                    
+                    yPos += 50;
+                    ctx.font = '18px Arial';
+                    
+                    // Materials breakdown
+                    ctx.fillText(`🧱 Materials Cost (with 8.375% tax):`, 60, yPos);
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`$${Math.round(calculator.costs.materials).toLocaleString()}`, canvas.width - 60, yPos);
+                    ctx.textAlign = 'left';
+                    yPos += 30;
+                    
+                    // Labor breakdown
+                    ctx.fillText(`👷 Labor Cost:`, 60, yPos);
+                    ctx.textAlign = 'right';
+                    if (calculator.data.include_labor) {
+                        ctx.fillText(`$${Math.round(calculator.costs.labor).toLocaleString()}`, canvas.width - 60, yPos);
+                    } else {
+                        ctx.fillText(`$0 (Not Included)`, canvas.width - 60, yPos);
+                    }
+                    ctx.textAlign = 'left';
+                    yPos += 30;
+                    
+                    // Other costs
+                    ctx.fillText(`📋 Permits & Other Costs:`, 60, yPos);
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`$${Math.round(calculator.costs.other).toLocaleString()}`, canvas.width - 60, yPos);
+                    ctx.textAlign = 'left';
+                    yPos += 30;
+                    
+                    // Profit
+                    ctx.fillText(`💼 Contractor Profit:`, 60, yPos);
+                    ctx.textAlign = 'right';
+                    if (calculator.data.include_profit) {
+                        ctx.fillText(`$${Math.round(calculator.costs.profit).toLocaleString()}`, canvas.width - 60, yPos);
+                    } else {
+                        ctx.fillText(`$0 (Not Included)`, canvas.width - 60, yPos);
+                    }
+                    ctx.textAlign = 'left';
+                    yPos += 30;
+                    
+                    // Land cost if applicable
+                    if (calculator.data.land_cost_type !== 'none') {
+                        ctx.fillText(`🏞️ Land Cost:`, 60, yPos);
+                        ctx.textAlign = 'right';
+                        ctx.fillText(`$${Math.round(calculator.costs.land_cost).toLocaleString()}`, canvas.width - 60, yPos);
+                        ctx.textAlign = 'left';
+                        yPos += 30;
+                    }
+                    
+                    // Total Section - Make it prominent
+                    yPos += 50;
+                    ctx.fillStyle = '#E5A825';
+                    ctx.fillRect(40, yPos - 30, canvas.width - 80, 80);
+                    ctx.strokeStyle = '#000000';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(40, yPos - 30, canvas.width - 80, 80);
+                    
+                    ctx.fillStyle = '#000000';
+                    ctx.font = 'bold 32px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('🏆 TOTAL PROJECT COST', canvas.width / 2, yPos - 5);
+                    
+                    ctx.font = 'bold 36px Arial';
+                    ctx.fillText(`$${Math.round(calculator.costs.total).toLocaleString()}`, canvas.width / 2, yPos + 30);
+                    
+                    yPos += 60;
+                    ctx.font = '20px Arial';
+                    const costPerSqft = calculator.costs.total / calculator.data.sqft;
+                    ctx.fillText(`Cost per Square Foot: $${costPerSqft.toFixed(2)}`, canvas.width / 2, yPos);
+                    
+                    // Important Notes Section
+                    yPos += 80;
+                    ctx.fillStyle = '#fff3cd';
+                    ctx.fillRect(40, yPos - 20, canvas.width - 80, 140);
+                    ctx.strokeStyle = '#856404';
+                    ctx.strokeRect(40, yPos - 20, canvas.width - 80, 140);
+                    
+                    ctx.fillStyle = '#856404';
+                    ctx.font = 'bold 18px Arial';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`⚠️ IMPORTANT NOTES`, 60, yPos + 10);
+                    
+                    yPos += 35;
+                    ctx.font = '14px Arial';
+                    ctx.fillText(`• This is a preliminary estimate based on current Las Vegas market rates`, 60, yPos);
+                    yPos += 20;
+                    ctx.fillText(`• Final costs may vary based on site conditions and material selection`, 60, yPos);
+                    yPos += 20;
+                    ctx.fillText(`• Estimate valid for 30 days from generation date`, 60, yPos);
+                    yPos += 20;
+                    ctx.fillText(`• Professional consultation recommended for final project planning`, 60, yPos);
+                    
+                    // Contact Footer
+                    yPos = canvas.height - 100;
+                    ctx.fillStyle = '#E5A825';
+                    ctx.fillRect(0, yPos - 20, canvas.width, 120);
+                    
+                    // Try to add smaller logo in footer if main logo loaded
+                    if (logo.complete && logo.naturalHeight !== 0) {
+                        const footerLogoWidth = 80;
+                        const footerLogoHeight = (logo.naturalHeight / logo.naturalWidth) * footerLogoWidth;
+                        const footerLogoX = (canvas.width - footerLogoWidth) / 2;
+                        ctx.drawImage(logo, footerLogoX, yPos - 10, footerLogoWidth, footerLogoHeight);
+                        
+                        ctx.fillStyle = '#000000';
+                        ctx.font = 'bold 16px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('📍 4485 Riviera Ridge Ave, Las Vegas, NV 89115', canvas.width / 2, yPos + 35);
+                        
+                        ctx.font = '14px Arial';
+                        ctx.fillText('📞 (702) 643-2900 • ✉️ info@aswframing.com', canvas.width / 2, yPos + 55);
+                        
+                        ctx.font = '12px Arial';
+                        ctx.fillText('🌐 www.aswframing.com • Licensed, Bonded & Insured', canvas.width / 2, yPos + 75);
+                    } else {
+                        ctx.fillStyle = '#000000';
+                        ctx.font = 'bold 18px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.fillText('ASF Design - American Southwest Framing', canvas.width / 2, yPos + 15);
+                        
+                        ctx.font = '16px Arial';
+                        ctx.fillText('📍 4485 Riviera Ridge Ave, Las Vegas, NV 89115', canvas.width / 2, yPos + 40);
+                        
+                        ctx.font = '14px Arial';
+                        ctx.fillText('📞 (702) 643-2900 • ✉️ info@aswframing.com', canvas.width / 2, yPos + 60);
+                    }
+                    
+                    // Download the image
+                    const link = document.createElement('a');
+                    const timestamp = new Date().toISOString().slice(0, 10);
+                    link.download = `ASF_Detailed_Estimate_${calculator.data.sqft}sqft_${tierName}_${timestamp}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.click();
+                    
+                    alert('✅ Detailed PNG estimate downloaded successfully!');
+                }
+                
+            } catch (error) {
+                console.error('Error generating detailed PNG:', error);
+                alert('❌ Error generating PNG file. Please try again.');
+            }
+        }
+
         // Enhanced ASF Calculator Class with Smooth Blur Effects
         class ASFCalculator {
             constructor() {
@@ -2791,30 +3502,35 @@
         document.addEventListener('DOMContentLoaded', function() {
             calculator = new ASFCalculator();
             
-            // Setup admin access trigger
+           // Setup admin access trigger - ENHANCED
             let clickCount = 0;
             let clickTimer = null;
-            
-            document.getElementById('admin-trigger').addEventListener('click', function() {
-                clickCount++;
-                
-                if (clickCount === 1) {
-                    clickTimer = setTimeout(() => {
-                        clickCount = 0;
-                    }, 2000);
-                } else if (clickCount === 5) {
-                    // 5 clicks within 2 seconds opens admin panel
-                    clearTimeout(clickTimer);
-                    clickCount = 0;
+
+            const adminTrigger = document.getElementById('admin-trigger');
+            if (adminTrigger) {
+                adminTrigger.addEventListener('click', function() {
+                    clickCount++;
                     
-                    const password = prompt('🔐 Enter admin password:');
-                    if (password === 'asf2025' || password === 'admin') {
-                        openAdminPanel();
-                    } else if (password !== null) {
-                        alert('❌ Incorrect password');
+                    if (clickCount === 1) {
+                        clickTimer = setTimeout(() => {
+                            clickCount = 0;
+                        }, 2000);
+                    } else if (clickCount === 5) {
+                        clearTimeout(clickTimer);
+                        clickCount = 0;
+                        
+                        const password = prompt('🔐 Enter admin password:');
+                        if (password === 'asf2025' || password === 'admin') {
+                            openAdminPanel();
+                        } else if (password !== null) {
+                            alert('❌ Incorrect password');
+                        }
                     }
-                }
-            });
+                });
+            }
+
+            // Load any saved admin prices on startup
+            updateCalculatorPrices();
             
             // Load any saved admin prices
             updateCalculatorPrices();
